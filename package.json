@@ -1,0 +1,94 @@
+{
+  "name": "@finografic/create",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.8.0",
+  "description": "Opinionated generator and codemod toolkit for the @finografic ecosystem.",
+  "homepage": "https://github.com/finografic/create",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finografic/create.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finografic/create/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "author": {
+    "name": "Justin",
+    "email": "justin.blair.rankin@gmail.com",
+    "url": "http://finografic.github.com/cv-justin-rankin"
+  },
+  "license": "MIT",
+  "keywords": [
+    "finografic",
+    "core",
+    "types",
+    "utils"
+  ],
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "module": "./dist/index.mjs",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "========== DEV": "=======================================================",
+    "dev": "tsdown --watch",
+    "·········· BUILD": "·····················································",
+    "build": "tsdown",
+    "·········· TESTING": "···················································",
+    "test.run": "vitest",
+    "test.coverage": "vitest run --coverage",
+    "·········· LINTING": "···················································",
+    "lint": "eslint .",
+    "lint.fix": "eslint . --fix",
+    "·········· PUBLISH.GITHUB": "·····················································",
+    "release.github.patch": "pnpm run release.check && pnpm version patch && git push --follow-tags",
+    "release.github.minor": "pnpm run release.check && pnpm version minor && git push --follow-tags",
+    "release.github.major": "pnpm run release.check && pnpm version major && git push --follow-tags",
+    "release.check": "pnpm lint && pnpm typecheck",
+    "·········· REGISTRIES": "··············································",
+    "view.registry.github": "pnpm view @finografic/create --registry=https://npm.pkg.github.com",
+    "·········· UTILS": "·····················································",
+    "tsc.debug": "pnpm exec tsc --pretty --project tsconfig.json",
+    "typecheck": "pnpm exec tsc --project tsconfig.json --noEmit",
+    "·········· HOOKS": "·····················································",
+    "prepack": "pnpm build",
+    "prepare": "simple-git-hooks"
+  },
+  "dependencies": {
+    "lodash": "4.17.21"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@eslint/js": "^9.32.0",
+    "@types/lodash": "4.17.13",
+    "@types/node": "20.15.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "9.16.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "lint-staged": "^16.1.2",
+    "markdownlint-cli": "^0.47.0",
+    "simple-git-hooks": "^2.13.0",
+    "tsdown": "^0.18.4",
+    "type-fest": "^5.3.1",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.16"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "pnpm exec eslint --fix"
+    ],
+    "*.md": [
+      "pnpm exec markdownlint"
+    ]
+  }
+}
