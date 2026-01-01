@@ -22,36 +22,43 @@ Successfully built `@finografic/create` - a complete package generator for the f
 Located in `templates/package/`:
 
 **Core Configuration:**
-- `package.json` (with __TOKENS__)
+
+- `package.json` (with **TOKENS**)
 - `tsconfig.json`
 - `tsdown.config.ts`
 - `vitest.config.ts`
 
 **Linting & Formatting:**
+
 - `eslint.config.mjs`
 - `prettier.config.mjs`
 - `commitlint.config.mjs`
 - `.markdownlint.jsonc`
 
 **Git & Hooks:**
+
 - `.gitignore`
 - `.simple-git-hooks.mjs`
 
 **Documentation:**
+
 - `README.md` (with tokens)
 - `LICENSE` (with tokens)
 
 **GitHub (Optional):**
+
 - `.github/workflows/release.yml`
 - `.github/copilot-instructions.md`
 - `.github/instructions/` (7 instruction files)
 
 **Source:**
+
 - `src/index.ts` (starter file)
 
 ## ✨ Features Implemented
 
 ### Token Replacement System
+
 - Clean `__UPPER_SNAKE_CASE__` pattern
 - Replaces during file copy
 - Supports all these tokens:
@@ -61,6 +68,7 @@ Located in `templates/package/`:
   - `__YEAR__`
 
 ### Interactive Prompts
+
 - Beautiful CLI with `@clack/prompts`
 - Validates inputs with Zod schemas
 - Multiselect for optional features:
@@ -69,12 +77,14 @@ Located in `templates/package/`:
   - GitHub workflow
 
 ### Smart File Operations
+
 - Recursive directory copying
 - Selective token replacement (only `.ts`, `.json`, `.md`, etc.)
 - Binary files copied directly
 - Optional file filtering (skip AI rules if not selected)
 
 ### Post-Generation
+
 - Auto `pnpm install`
 - Auto git init + first commit
 - Helpful next steps printed
@@ -134,4 +144,3 @@ pnpm dlx @finografic/create
 **Status:** ✅ READY FOR COMMIT
 
 The generator is fully functional and ready to scaffold new @finografic packages!
-

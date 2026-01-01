@@ -36,4 +36,3 @@ pnpm lint
 ## License
 
 MIT © [__AUTHOR_NAME__](__AUTHOR_URL__)
-
