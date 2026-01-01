@@ -1,4 +1,3 @@
-# minimal example for publishing a package that needs build
 name: Release
 on:
   push:
