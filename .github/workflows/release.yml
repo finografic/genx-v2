@@ -1,5 +1,5 @@
+# minimal example for publishing a package that needs build
 name: Release
-
 on:
   push:
     tags:
@@ -12,28 +12,15 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node (use PAT for auth)
+      - name: Setup Node (so actions/setup-node uses correct registry)
         uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: https://npm.pkg.github.com
           scope: '@finografic'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create project .npmrc (ensures pnpm sees the token)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "@finografic:registry=https://npm.pkg.github.com/" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" > /tmp/npmrc
-          NPM_CONFIG_USERCONFIG=/tmp/npmrc npm --registry=https://npm.pkg.github.com view @finografic/core || exit 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -41,20 +28,15 @@ jobs:
           version: 10
 
       - name: Install deps
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
 
-      # Publish: using GITHUB_TOKEN is fine for publishing this repo's package
-      - name: Publish package
-        run: pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pack (optional - useful to inspect)
+        run: pnpm pack
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # using repo GITHUB_TOKEN to publish is OK
+        run: pnpm publish --no-git-checks
