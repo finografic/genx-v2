@@ -65,8 +65,8 @@
     "update.project-scripts": "pnpm update @finografic/core --latest",
     "upgrade.deps.all": "pnpm update --latest",
     "·········· UTILS": "·····················································",
-    "tsc.debug": "tsc --pretty --project tsconfig.json",
-    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "tsc.debug": "pnpm exec tsc --pretty --project tsconfig.json",
+    "typecheck": "pnpm exec tsc --project tsconfig.json --noEmit",
     "·········· HOOKS": "·····················································",
     "prepack": "pnpm build",
     "prepare": "simple-git-hooks"
