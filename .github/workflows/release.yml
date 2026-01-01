@@ -24,6 +24,15 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: '@finografic'
 
+      - name: Configure npm auth for GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Ensure the scope -> registry mapping (required by some clients)
+          echo "@finografic:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          # Provide auth via environment variable (safe; the actual token is not output)
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
