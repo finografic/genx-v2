@@ -11,6 +11,8 @@ build/
 .env.*.local
 
 # IDE
+.cursor/
+!.cursor/rules/
 .idea/
 *.swp
 *.swo
