@@ -52,7 +52,7 @@ export default [
             // Side effect imports
             ['^\\u0000'],
             // External packages (e.g. `execa`, `picocolors`, `@types/*`)
-            ['^(?!@finografic)(?!@workspace)@?\\w'],
+            ['^(?!@finografic)(?!@workspace)@?[a-z]'],
             [
               '^(lib|utils)',
               '^(types|constants|config)',

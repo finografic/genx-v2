@@ -47,14 +47,11 @@ export default [
         'error',
         {
           groups: [
-            // Node.js built-ins (e.g. `node:path`)
             ['^node:'],
-            // Internal/workspace packages
             ['^@finografic', '^@workspace'],
-            // Side effect imports
             ['^\\u0000'],
             // External packages (e.g. `execa`, `picocolors`, `@types/*`)
-            ['^(?!@finografic)(?!@workspace)@?\\w'],
+            ['^(?!@finografic)(?!@workspace)@?[a-z]'],
             [
               '^(lib|utils)',
               '^(types|constants|config)',
@@ -96,7 +93,6 @@ export default [
       "markdownlint/md040": "off", // Fenced code language
       "markdownlint/md041": "off", // First line heading
       "markdownlint/md043": "off", // Required heading structure
-      // Stylistic rules for markdown (must come after markdownlint rules)
       'stylistic/no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
       'stylistic/no-trailing-spaces': 'error',
       'stylistic/no-multi-spaces': ['error', { exceptions: { Property: true } }],
