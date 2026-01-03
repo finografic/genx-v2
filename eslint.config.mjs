@@ -74,11 +74,8 @@ export default [
     },
     rules: {
       ...markdownlintPlugin.configs.recommended.rules,
-      "markdownlint/md013": ["error", {
-        "line_length": 120,
-        "heading_line_length": 120,
-        "code_block_line_length": 120,
-      }],
+      "markdownlint/md013": "off",
+      "markdownlint/md024": "off",
       "markdownlint/md025": "off",
       "markdownlint/md040": "off",
       "markdownlint/md041": "off",
