@@ -3,7 +3,9 @@ import type { PackageConfig } from '@finografic/core';
 import * as clack from '@clack/prompts';
 import pc from 'picocolors';
 
-import { descriptionSchema, emailSchema, packageNameSchema, scopeSchema } from './validation.utils';
+import { promptAuthor } from 'utils/steps/steps.utils';
+import { descriptionSchema, packageNameSchema, scopeSchema } from 'utils/validation.utils';
+import { defaultsConfig } from 'config/defaults.config';
 
 export function intro(message: string): void {
   clack.intro(pc.bgCyan(pc.black(` ${message} `)));
@@ -31,7 +33,8 @@ export function infoMessage(message: string): void {
 export async function promptPackageConfig(): Promise<PackageConfig | null> {
   const scope = await clack.text({
     message: 'Package scope (finografic or @finografic):',
-    placeholder: '@finografic',
+    placeholder: defaultsConfig.scope,
+    initialValue: defaultsConfig.scope,
     validate: (value) => {
       const result = scopeSchema.safeParse(value);
       return result.success ? undefined : result.error.issues[0].message;
@@ -47,7 +50,7 @@ export async function promptPackageConfig(): Promise<PackageConfig | null> {
     message: 'Package name:',
     placeholder: 'my-package',
     validate: (value) => {
-      if (value.includes('/')) {
+      if (value && value.includes('/')) {
         return 'Enter the package name only (no scope). Example: my-package';
       }
       const result = packageNameSchema.safeParse(value);
@@ -62,7 +65,8 @@ export async function promptPackageConfig(): Promise<PackageConfig | null> {
 
   const description = await clack.text({
     message: 'Package description:',
-    placeholder: 'A cool new package',
+    placeholder: defaultsConfig.description,
+    initialValue: defaultsConfig.description,
     validate: (value) => {
       const result = descriptionSchema.safeParse(value);
       return result.success ? undefined : result.error.issues[0].message;
@@ -74,36 +78,9 @@ export async function promptPackageConfig(): Promise<PackageConfig | null> {
     return null;
   }
 
-  const authorName = await clack.text({
-    message: 'Author name:',
-    placeholder: 'Justin',
-  });
+  const author = await promptAuthor(defaultsConfig.author);
 
-  if (clack.isCancel(authorName)) {
-    clack.cancel('Operation cancelled');
-    return null;
-  }
-
-  const authorEmail = await clack.text({
-    message: 'Author email:',
-    placeholder: 'justin@example.com',
-    validate: (value) => {
-      const result = emailSchema.safeParse(value);
-      return result.success ? undefined : result.error.issues[0].message;
-    },
-  });
-
-  if (clack.isCancel(authorEmail)) {
-    clack.cancel('Operation cancelled');
-    return null;
-  }
-
-  const authorUrl = await clack.text({
-    message: 'Author URL:',
-    placeholder: 'https://github.com/username',
-  });
-
-  if (clack.isCancel(authorUrl)) {
+  if (!author) {
     clack.cancel('Operation cancelled');
     return null;
   }
@@ -112,11 +89,7 @@ export async function promptPackageConfig(): Promise<PackageConfig | null> {
     name: name as string,
     scope: scope as string,
     description: description as string,
-    author: {
-      name: authorName as string,
-      email: authorEmail as string,
-      url: authorUrl as string,
-    },
+    author,
   };
 }
 

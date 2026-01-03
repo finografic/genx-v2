@@ -1,19 +1,27 @@
 import pc from 'picocolors';
 
-import type { HelpConfig } from 'utils/render-help/render-help.utils';
+import { defaultHelpOptions } from 'config/help.config';
+import type { HelpNote, HelpNoteOptions, HelpNoteReturn } from 'types/help.types';
 import { padLines } from './help-padding.utils';
 
-export function renderFooterBlock(
-  help: NonNullable<HelpConfig['help']>,
-  minWidth?: number
-): string {
-  const content = help
+interface FooterNoteProps {
+  footer: HelpNote;
+  minWidth?: number;
+  options?: HelpNoteOptions;
+}
+
+export function renderFooterNote(
+  { footer, minWidth = defaultHelpOptions.minWidth }: FooterNoteProps): HelpNoteReturn {
+
+  const title = footer.title;
+  const content = footer.list
     .map((item) =>
       item.description
-        ? `  ${pc.cyan(item.label)}  ${item.description}`
-        : `  ${pc.cyan(item.label)}`
-    )
-    .join('\n');
+        ? `${pc.white(item.label)}  ${item.description}`
+        : `${pc.white(item.label)}`,
+    ).join('\n');
 
-  return minWidth ? padLines(content, minWidth) : content;
+  const formattedContent = minWidth ? padLines(content, minWidth) : content;
+
+  return [ formattedContent, title, { format: (line: string) => line } ];
 }

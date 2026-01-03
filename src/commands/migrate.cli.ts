@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -5,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 import * as clack from '@clack/prompts';
 import pc from 'picocolors';
 
-import { copyDir, copyTemplate, ensureDir, errorMessage, infoMessage, intro, successMessage } from 'utils';
-import { safeExit } from 'utils/env.utils';
+import { copyDir, copyTemplate, ensureDir, errorMessage, findPackageRoot, getTemplatesPackageDir, infoMessage, intro, successMessage } from 'utils';
+import { isDevelopment, safeExit } from 'utils/env.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
 import { migrateConfig } from 'config/migrate.config';
 import type { MigrateOnlySection } from 'types/migrate.types';
@@ -60,12 +61,6 @@ function isOnlyEnabled(only: Set<MigrateOnlySection> | null, section: MigrateOnl
   return only.has(section);
 }
 
-function getTemplateDir(): string {
-  const thisDir = fileURLToPath(new URL('.', import.meta.url));
-  // dist/commands -> templates/package
-  return resolve(thisDir, '../../templates/package');
-}
-
 async function readPackageJson(path: string): Promise<PackageJson> {
   const raw = await readFile(path, 'utf8');
   return JSON.parse(raw) as PackageJson;
@@ -113,8 +108,8 @@ function patchPackageJson(pkg: PackageJson, packageNameWithoutScope: string): { 
   next['lint-staged'] = lintStaged;
 
   // keywords
-  const kwRaw = pkg.keywords;
-  const keywords = Array.isArray(kwRaw) ? (kwRaw.filter((k) => typeof k === 'string') as string[]) : [];
+  const keywordRaw = pkg.keywords;
+  const keywords = Array.isArray(keywordRaw) ? (keywordRaw.filter((k) => typeof k === 'string') as string[]) : [];
   let changedKeywords = false;
 
   const finKw = migrateConfig.packageJson.ensureKeywords.includeFinograficKeyword;
@@ -143,6 +138,13 @@ async function writePackageJson(path: string, pkg: PackageJson): Promise<void> {
 
 export async function migratePackage(argv: string[], options: { cwd: string }): Promise<void> {
   intro('Migrate existing @finografic package');
+
+  // Helpful debug info (always on in dev)
+  const debug = isDevelopment() || process.env.FINOGRAFIC_DEBUG === '1';
+  if (debug) {
+    infoMessage(`execPath: ${process.execPath}`);
+    infoMessage(`argv[1]: ${process.argv[1] ?? ''}`);
+  }
 
   const { targetDir, write, only } = parseArgs(argv, options.cwd);
 
@@ -200,7 +202,29 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
   }
 
   // template sync plan
-  const templateDir = getTemplateDir();
+  const fromDir = fileURLToPath(new URL('.', import.meta.url));
+  const pkgRoot = findPackageRoot(fromDir);
+  const templateDir = getTemplatesPackageDir(fromDir);
+
+  if (debug) {
+    infoMessage(`importMetaDir: ${fromDir}`);
+    infoMessage(`packageRoot: ${pkgRoot}`);
+    infoMessage(`templateDir: ${templateDir}`);
+  }
+
+  if (!existsSync(templateDir)) {
+    errorMessage(
+      [
+        'Template directory not found.',
+        `templateDir: ${templateDir}`,
+        `importMetaDir: ${fromDir}`,
+        `packageRoot: ${pkgRoot}`,
+        'If running a linked build, re-run `pnpm build` in @finografic/create.',
+      ].join('\n'),
+    );
+    safeExit(1);
+    return;
+  }
   for (const item of migrateConfig.syncFromTemplate) {
     if (!isOnlyEnabled(only, item.section)) continue;
     plan.push(`sync ${item.targetPath} (from template ${item.templatePath})`);

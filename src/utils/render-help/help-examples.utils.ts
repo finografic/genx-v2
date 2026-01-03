@@ -1,25 +1,32 @@
 import pc from 'picocolors';
 
-import type { HelpConfig } from 'utils/render-help/render-help.utils';
+import { defaultHelpOptions } from 'config/help.config';
+import type { HelpNote, HelpNoteOptions, HelpNoteReturn } from 'types/help.types';
 import { padLines } from './help-padding.utils';
 
-export function renderExamplesBlock(
-  examples: NonNullable<HelpConfig['examples']>,
-  minWidth?: number
-): string {
-  const content = examples
-    .map((ex) => {
-      const parts: string[] = [];
+interface ExamplesNoteProps {
+  examples: HelpNote;
+  minWidth?: number;
+  options?: HelpNoteOptions;
+}
 
-      if (ex.comment) {
-        parts.push(pc.dim(`# ${ex.comment}`));
-      }
+export function renderExamplesNote(
+  { examples, minWidth = defaultHelpOptions.minWidth }: ExamplesNoteProps): HelpNoteReturn {
 
-      parts.push(pc.cyan(ex.command));
+  const title = examples.title;
+  const content = examples.list.map((example) => {
+    const parts: string[] = [];
 
-      return parts.join('\n');
-    })
-    .join('\n\n');
+    if (example.label) {
+      parts.push(pc.dim(`# ${example.label}`));
+    }
 
-  return minWidth ? padLines(content, minWidth) : content;
+    parts.push(pc.white(example.description));
+
+    return parts.join('\n');
+  }).join('\n\n');
+
+  const formattedContent = minWidth ? padLines(content, minWidth) : content;
+
+  return [ formattedContent, title, { format: (line: string) => line } ];
 }

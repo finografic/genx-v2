@@ -1,53 +1,33 @@
-import { intro, note, outro } from '@clack/prompts';
+import * as clack from '@clack/prompts';
 
-import { renderCommandsBlock } from './help-commands.utils';
-import { renderExamplesBlock } from './help-examples.utils';
-import { renderFooterBlock } from './help-footer.utils';
+import type { HelpConfig } from 'types/help.types';
+import { renderCommandsNote } from './help-commands.utils';
+import { renderExamplesNote } from './help-examples.utils';
+import { renderFooterNote } from './help-footer.utils';
 import { renderMainSignature } from './help-main.utils';
 
-export interface HelpConfig {
-  main: {
-    bin: string;
-    args?: string;
-  };
-  commands?: Array<{
-    label: string;
-    description: string;
-  }>;
-  examples?: Array<{
-    comment?: string;
-    command: string;
-  }>;
-  help?: Array<{
-    label: string;
-    description?: string;
-  }>;
-  minWidth?: number;
-}
-
-export function renderHelp(config: HelpConfig): void {
-  // console.clear();
+export function renderHelp({ main, commands, examples, footer, minWidth }: HelpConfig): void {
+  console.clear();
   console.log('');
 
   // Main command signature
-  intro(renderMainSignature(config.main));
+  clack.intro(renderMainSignature(main));
 
   // Commands box
-  note(
-    renderCommandsBlock(config),
-    'Commands'
-  );
+  if (commands) {
+    clack.note( ...renderCommandsNote({ commands, minWidth }));
+  }
 
   // Examples box
-  if (config.examples?.length) {
-    note(renderExamplesBlock(config.examples, config.minWidth), 'Examples');
+  if (examples) {
+    clack.note( ...renderExamplesNote({ examples, minWidth }));
   }
 
   // Help footer
-  if (config.help?.length) {
-    note(renderFooterBlock(config.help, config.minWidth), 'Get Help');
+  if (footer) {
+    clack.note( ...renderFooterNote({ footer, minWidth }));
   }
 
   // Outro
-  outro('Use --help with a command for more details');
+  clack.outro('Use --help with a command for more details');
 }

@@ -1,8 +1,7 @@
 import pc from 'picocolors';
 
-export function renderMainSignature(main: { bin: string; args?: string; }): string {
-  return (
-    pc.bold(pc.cyanBright(main.bin)) +
-    (main.args ? ` ${pc.bold(pc.whiteBright(main.args))}` : '')
-  );
+import type { HelpConfig } from 'types/help.types';
+
+export function renderMainSignature(main: HelpConfig['main']): string {
+  return pc.bold(pc.cyanBright(main.bin)) + (main.args ? ` ${pc.bold(pc.whiteBright(main.args))}` : '');
 }

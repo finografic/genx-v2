@@ -32,7 +32,7 @@ export const descriptionSchema = z.string().min(10).max(200);
 /**
  * Validate email.
  */
-export const emailSchema = z.string().email();
+export const emailSchema = z.string().email({ message: 'Invalid email address' });
 
 /**
  * Check if a directory is safe to use as a project target.

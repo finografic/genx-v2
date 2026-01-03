@@ -10,13 +10,13 @@ export function stripAnsi(str: string): string {
  * Pad a line to a minimum width by adding spaces at the end.
  * Only pads if the visible (ANSI-stripped) length is less than minWidth.
  */
-export function padLine(line: string, minWidth: number): string {
-  const visibleLength = stripAnsi(line).length;
+export function padValue(value: string, minWidth: number): string {
+  const visibleLength = stripAnsi(value).length;
   if (visibleLength >= minWidth) {
-    return line;
+    return value;
   }
   const padding = ' '.repeat(minWidth - visibleLength);
-  return line + padding;
+  return value + padding;
 }
 
 /**
@@ -29,6 +29,6 @@ export function padLines(content: string, minWidth: number): string {
 
   return content
     .split('\n')
-    .map((line) => padLine(line, minWidth))
+    .map((line) => padValue(line, minWidth))
     .join('\n');
 }

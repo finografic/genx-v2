@@ -1,15 +1,26 @@
 import pc from 'picocolors';
 
-import type { HelpConfig } from 'utils/render-help/render-help.utils';
-import { padLines } from './help-padding.utils';
+import { defaultHelpOptions } from 'config/help.config';
+import type { HelpNote, HelpNoteOptions, HelpNoteReturn } from 'types/help.types';
+import { padLines, padValue } from './help-padding.utils';
 
-export function renderCommandsBlock(config: HelpConfig): string {
-  if (!config.commands?.length) return '';
+interface CommandsNoteProps {
+  commands: HelpNote;
+  minWidth?: number;
+  options?: HelpNoteOptions;
+}
 
-  const content = config.commands.map(
-    (cmd) =>
-      `${pc.bold(pc.cyanBright(cmd.label))}  ${cmd.description}`
-  ).join('\n');
+export function renderCommandsNote({ commands, minWidth, options }: CommandsNoteProps): HelpNoteReturn {
+  const title = commands.title;
+  const labelWidth = options?.labels.minWidth ?? defaultHelpOptions.labels.minWidth;
 
-  return config.minWidth ? padLines(content, config.minWidth) : content;
+  const content = commands.list.map((command) => {
+    const label = pc.cyanBright(command.label);
+    const paddedLabel = padValue(label, labelWidth);
+    return `${paddedLabel}  ${command.description}`;
+  }).join('\n');
+
+  const formattedContent = minWidth ? padLines(content, minWidth) : content;
+
+  return [ formattedContent, title, { format: (line: string) => line } ];
 }

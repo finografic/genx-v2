@@ -191,9 +191,28 @@ pnpm test.run
 
 ### Testing the CLI Locally
 
-After building, you can test both commands:
+#### Option 1: Link Globally (Recommended)
 
-#### Test Create Command
+Link the built package globally so you can use `finografic-create` from anywhere:
+
+```bash
+# Build and link globally
+pnpm link
+
+# Now you can use it from anywhere:
+finografic-create create
+finografic-create migrate --help
+finografic-create help
+
+# When done testing, unlink:
+pnpm unlink
+```
+
+**Note:** After making changes, rebuild with `pnpm build` and the linked version will automatically use the new build.
+
+#### Option 2: Direct Node Execution
+
+Run the built binary directly:
 
 ```bash
 # Build first
@@ -201,17 +220,6 @@ pnpm build
 
 # Test create (will prompt interactively)
 node dist/index.mjs create
-
-# Or test in a temporary directory
-cd /tmp
-node /path/to/@finografic-create/dist/index.mjs create
-```
-
-#### Test Migrate Command
-
-```bash
-# Build first
-pnpm build
 
 # Test migrate (dry-run) in current directory
 node dist/index.mjs migrate
@@ -224,21 +232,23 @@ node dist/index.mjs migrate ../@finografic-core --write
 
 # Test migrate with --only flag
 node dist/index.mjs migrate ../@finografic-core --only=package-json --write
-```
 
-#### Test Help System
-
-```bash
-# Root help
+# Test help system
 node dist/index.mjs help
 node dist/index.mjs --help
-
-# Command-specific help
 node dist/index.mjs create --help
 node dist/index.mjs migrate --help
 ```
 
-**Note:** When testing locally, you can also use `pnpm dlx` from the project root, but building and running `node dist/index.mjs` is faster for iteration.
+#### Option 3: Using pnpm dlx
+
+You can also use `pnpm dlx` from the project root:
+
+```bash
+pnpm dlx @finografic/create create
+```
+
+**Note:** `pnpm link` is the fastest for iteration since you only need to rebuild after changes.
 
 ### Documentation
 

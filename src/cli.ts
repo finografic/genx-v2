@@ -9,40 +9,75 @@ import { showMigrateHelp } from './help/migrate.help.js';
 import { showRootHelp } from './help/root.help.js';
 import { safeExit } from './utils/env.utils.js';
 
-const cwd = process.cwd();
-const argv = process.argv.slice(2);
+type CommandHandler = (args: string[], ctx: { cwd: string }) => Promise<void> | void;
+type HelpHandler = () => void;
 
-const command = argv[0] ?? 'create';
-const flags = argv.slice(1);
+async function main(): Promise<void> {
+  const cwd = process.cwd();
+  const argv = process.argv.slice(2);
 
-// Handle help flags
-if (flags.includes('--help') || flags.includes('-h')) {
-  if (command === 'migrate') {
-    showMigrateHelp();
-  } else if (command === 'create') {
-    showCreateHelp();
-  } else {
+  // `finografic-create --help` (or `pnpm dev.cli --help`) should show root help
+  if (argv[0] === '--help' || argv[0] === '-h') {
     showRootHelp();
+    return;
   }
-  safeExit(0);
-} else {
-  // Route commands
-  switch (command) {
-    case 'create':
+
+  const command = argv[0] ?? 'create';
+  const args = argv.slice(1);
+
+  /* ────────────────────────────────────────────────────────── */
+  /* Command registry                                            */
+  /* ────────────────────────────────────────────────────────── */
+
+  const commands: Record<string, CommandHandler> = {
+    create: async () => {
       await createPackage({ cwd });
-      break;
+    },
 
-    case 'migrate':
+    migrate: async () => {
       await migratePackage(argv, { cwd });
-      break;
+    },
 
-    case 'help':
+    help: () => {
       showRootHelp();
-      break;
+    },
+  };
 
-    default:
-      console.error(`Unknown command: ${command}`);
-      showRootHelp();
-      safeExit(1);
+  const helpHandlers: Record<string, HelpHandler> = {
+    create: showCreateHelp,
+    migrate: showMigrateHelp,
+  };
+
+  /* ────────────────────────────────────────────────────────── */
+  /* Guards                                                      */
+  /* ────────────────────────────────────────────────────────── */
+
+  // --help / -h always wins (for subcommands)
+  if (args.includes('--help') || args.includes('-h')) {
+    helpHandlers[command]?.() ?? showRootHelp();
+    return;
   }
+
+  // Unknown command
+  if (!commands[command]) {
+    console.error(`Unknown command: ${command}`);
+    showRootHelp();
+    safeExit(1);
+    return;
+  }
+
+  /* ────────────────────────────────────────────────────────── */
+  /* Execute                                                     */
+  /* ────────────────────────────────────────────────────────── */
+
+  await commands[command](args, { cwd });
 }
+
+/* ────────────────────────────────────────────────────────── */
+/* Bootstrap                                                    */
+/* ────────────────────────────────────────────────────────── */
+
+main().catch((error) => {
+  console.error(error);
+  safeExit(1);
+});

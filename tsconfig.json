@@ -19,7 +19,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
       "commands/*": ["./src/commands/*"],
@@ -33,6 +32,6 @@
       "utils/*": ["./src/utils/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "eslint.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

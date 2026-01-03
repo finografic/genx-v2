@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -9,6 +10,8 @@ import {
   copyDir,
   ensureDir,
   errorMessage,
+  findPackageRoot,
+  getTemplatesPackageDir,
   infoMessage,
   intro,
   outro,
@@ -18,13 +21,20 @@ import {
   successMessage,
   validateTargetDir,
 } from 'utils';
-import { safeExit } from 'utils/env.utils';
+import { isDevelopment, safeExit } from 'utils/env.utils';
 
 /**
  * Create a new @finografic package from template.
  */
 export async function createPackage(options: { cwd: string }): Promise<void> {
   intro('Create new @finografic package');
+
+  // Helpful debug info (always on in dev)
+  const debug = isDevelopment() || process.env.FINOGRAFIC_DEBUG === '1';
+  if (debug) {
+    infoMessage(`execPath: ${process.execPath}`);
+    infoMessage(`argv[1]: ${process.argv[1] ?? ''}`);
+  }
 
   // 1. Prompt for package configuration
   const config = await promptPackageConfig();
@@ -66,10 +76,28 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
   try {
     await ensureDir(targetDir);
 
-    // Get template directory (relative to this file)
-    // We're in dist/index.mjs, templates are at root
-    const thisDir = fileURLToPath(new URL('.', import.meta.url));
-    const templateDir = resolve(thisDir, '../../templates/package');
+    // Resolve templates from package root (works in both `src/` (tsx) and bundled `dist/`)
+    const fromDir = fileURLToPath(new URL('.', import.meta.url));
+    const pkgRoot = findPackageRoot(fromDir);
+    const templateDir = getTemplatesPackageDir(fromDir);
+
+    if (debug) {
+      infoMessage(`importMetaDir: ${fromDir}`);
+      infoMessage(`packageRoot: ${pkgRoot}`);
+      infoMessage(`templateDir: ${templateDir}`);
+    }
+
+    if (!existsSync(templateDir)) {
+      throw new Error(
+        [
+          'Template directory not found.',
+          `templateDir: ${templateDir}`,
+          `importMetaDir: ${fromDir}`,
+          `packageRoot: ${pkgRoot}`,
+          'If running a linked build, re-run `pnpm build` in @finografic/create.',
+        ].join('\n'),
+      );
+    }
 
     const vars = buildTemplateVars(config);
 
