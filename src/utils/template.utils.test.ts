@@ -1,6 +1,6 @@
-import { applyTemplate, buildTemplateVars } from './template.js';
-
 import { describe, expect, it } from 'vitest';
+
+import { applyTemplate, buildTemplateVars } from './template.utils';
 
 describe('template utils', () => {
   describe('applyTemplate', () => {
@@ -68,4 +68,3 @@ describe('template utils', () => {
     });
   });
 });
-

@@ -14,7 +14,7 @@ Before releasing, ensure:
 
 ## Quick Release Commands
 
-### Patch Release (0.5.17 → 0.5.18)
+### Patch Release
 
 Bug fixes and minor changes.
 
@@ -22,7 +22,7 @@ Bug fixes and minor changes.
 pnpm release.github.patch
 ```
 
-### Minor Release (0.5.17 → 0.6.0)
+### Minor Release
 
 New features, backward compatible.
 
@@ -30,7 +30,7 @@ New features, backward compatible.
 pnpm release.github.minor
 ```
 
-### Major Release (0.5.17 → 1.0.0)
+### Major Release
 
 Breaking changes.
 
@@ -49,7 +49,7 @@ When you run a release command:
 
 2. **Version bump** in `package.json`
    - Creates a commit
-   - Creates a git tag (e.g., `v0.5.18`)
+   - Creates a git tag (e.g., `v0.1.0`)
 
 3. **Push to GitHub**
    - Commits and tag pushed with `--follow-tags`
@@ -62,21 +62,20 @@ When you run a release command:
    - Creates GitHub Release with auto-generated notes
 
 5. **GitHub Release appears**
-   - View at: <https://github.com/finografic/create/releases>
-   - Includes changelog and downloadable assets
+   - View at: `https://github.com/finografic/__NAME__/releases`
 
 ## Verification
 
 After releasing, verify:
 
 1. **GitHub Release created**
-   - <https://github.com/finografic/create/releases>
+   - `https://github.com/finografic/__NAME__/releases`
 
 2. **Package published**
-   - <https://github.com/finografic/create/packages>
+   - `https://github.com/finografic/__NAME__/packages`
 
 3. **Workflow succeeded**
-   - <https://github.com/finografic/create/actions>
+   - `https://github.com/finografic/__NAME__/actions`
 
 ## Manual Steps
 
@@ -92,10 +91,10 @@ pnpm release.publish
 
 ```bash
 # Delete local tag
-git tag -d v0.5.18
+git tag -d v0.1.0
 
 # Delete remote tag (if pushed)
-git push origin :refs/tags/v0.5.18
+git push origin :refs/tags/v0.1.0
 
 # Try again
 pnpm release.github.patch
@@ -121,4 +120,3 @@ pnpm test.run
 
 - [Developer Workflow](./DEVELOPER_WORKFLOW.md) - Daily development and git workflow
 - [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md) - Initial configuration
-- [GitHub Releases](https://github.com/finografic/create/releases) - Published releases

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { createPackage } from './commands/create.js';
-
 import process from 'node:process';
+
+import { createPackage } from './commands/create.js';
 
 const cwd = process.cwd();
 

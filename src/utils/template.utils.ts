@@ -1,4 +1,4 @@
-import type { TemplateVars } from '../types/index.js';
+import type { TemplateVars } from 'types/template.types';
 
 /**
  * Replace tokens in template content with actual values.
@@ -39,4 +39,3 @@ export function buildTemplateVars(config: {
     YEAR: new Date().getFullYear().toString(),
   };
 }
-

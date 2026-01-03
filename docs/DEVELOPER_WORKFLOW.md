@@ -35,6 +35,7 @@ git commit -m "feat: add new feature"
 **Automatic hooks run:**
 
 1. ✅ **pre-commit hook** triggers
+
    - Runs `npx lint-staged`
    - Lints and fixes **only staged files**
    - Fast (5-10 seconds)
@@ -89,8 +90,8 @@ pnpm release.github.patch  # or .minor or .major
   "scripts": {
     // Development
     "dev": "tsdown --watch",
-    "test": "vitest",                    // Watch mode
-    "test.run": "vitest run",            // Run once (CI/releases)
+    "test": "vitest", // Watch mode
+    "test.run": "vitest run", // Run once (CI/releases)
 
     // Quality checks
     "lint": "eslint .",
@@ -125,9 +126,7 @@ export default {
 ```json
 {
   "lint-staged": {
-    "*.{ts,tsx,js,mjs,cjs}": [
-      "eslint --fix"
-    ]
+    "*.{ts,tsx,js,mjs,cjs}": ["eslint --fix"]
   }
 }
 ```
@@ -153,11 +152,11 @@ pnpm test.coverage # vitest run --coverage
 
 **Why the distinction?**
 
-| Context | Command | Behavior |
-|---------|---------|----------|
-| Development | `pnpm test` | ⏱️ Watch mode - re-runs on file changes |
-| Releases | `pnpm test.run` | ✅ Runs once and exits - doesn't block |
-| CI/CD | `pnpm test.run` | ✅ Runs once and exits |
+| Context     | Command         | Behavior                                |
+| ----------- | --------------- | --------------------------------------- |
+| Development | `pnpm test`     | ⏱️ Watch mode - re-runs on file changes |
+| Releases    | `pnpm test.run` | ✅ Runs once and exits - doesn't block  |
+| CI/CD       | `pnpm test.run` | ✅ Runs once and exits                  |
 
 **Important:** `vitest` alone enters watch mode when run from terminal, but `vitest run` always runs once and exits. Use `test.run` in scripts that need to continue after tests complete.
 

@@ -1,6 +1,11 @@
-/* eslint-disable no-console */
+import { resolve } from 'node:path';
+import process from 'node:process';
+
+import { execa } from 'execa';
+import pc from 'picocolors';
 
 import {
+  buildTemplateVars,
   copyDir,
   ensureDir,
   errorMessage,
@@ -12,13 +17,7 @@ import {
   spinner,
   successMessage,
   validateTargetDir,
-} from '../utils/index.js';
-import { buildTemplateVars } from '../utils/template.js';
-
-import { execa } from 'execa';
-import { resolve } from 'node:path';
-import process from 'node:process';
-import pc from 'picocolors';
+} from 'utils';
 
 /**
  * Create a new @finografic package from template.
@@ -115,4 +114,3 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
 
   outro('Happy coding! 🦋');
 }
-

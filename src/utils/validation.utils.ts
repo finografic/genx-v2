@@ -1,7 +1,8 @@
-import { fileExists } from './fs.js';
-
 import { join } from 'node:path';
+
 import { z } from 'zod';
+
+import { fileExists } from './fs.utils';
 
 /**
  * Validate package name (scoped or unscoped).
@@ -59,4 +60,3 @@ export function validateExistingPackage(cwd: string): { ok: boolean; reason?: st
 
   return { ok: true };
 }
-

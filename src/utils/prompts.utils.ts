@@ -1,8 +1,9 @@
-import type { PackageConfig } from '../types/index.js';
-import { descriptionSchema, emailSchema,packageNameSchema, scopeSchema } from './validation.js';
+import type { PackageConfig } from '@finografic/core';
 
 import * as clack from '@clack/prompts';
 import pc from 'picocolors';
+
+import { descriptionSchema, emailSchema, packageNameSchema, scopeSchema } from './validation.utils';
 
 export function intro(message: string): void {
   clack.intro(pc.bgCyan(pc.black(` ${message} `)));
@@ -148,4 +149,3 @@ export async function promptFeatures() {
 export function spinner() {
   return clack.spinner();
 }
-

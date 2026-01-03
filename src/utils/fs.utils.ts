@@ -1,9 +1,9 @@
-import type { TemplateVars } from '../types/index.js';
-import { applyTemplate } from './template.js';
-
 import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
+
+import type { TemplateVars } from 'types/template.types';
+import { applyTemplate } from './template.utils';
 
 /**
  * Copy a template file with token replacement.
@@ -95,4 +95,3 @@ export async function ensureDir(path: string): Promise<void> {
 export function fileExists(path: string): boolean {
   return existsSync(path);
 }
-

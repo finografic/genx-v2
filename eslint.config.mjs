@@ -30,26 +30,34 @@ export default [
       'stylistic': stylistic,
     },
     rules: {
+      'no-console': 'off',
       'no-unused-vars': 'off',
       'no-redeclare': 'off',
       'stylistic/semi': 'error',
+      'stylistic/indent': ['error', 2, { SwitchCase: 1 }],
+      'stylistic/no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
+      'stylistic/no-trailing-spaces': 'error',
+      'stylistic/no-multi-spaces': ['error', { exceptions: { Property: true } }],
 
+      '@typescript-eslint/no-console':'off',
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-redeclare': 'warn',
-
-      'no-console': 'warn',
 
       'simple-import-sort/imports': [
         'error',
         {
           groups: [
+            // Node.js built-ins (e.g. `node:path`)
+            ['^node:'],
+            // Internal/workspace packages
             ['^@finografic', '^@workspace'],
+            // Side effect imports
             ['^\\u0000'],
+            // External packages (e.g. `execa`, `picocolors`, `@types/*`)
+            ['^(?!@finografic)(?!@workspace)@?\\w'],
             [
-              '^(lib)',
-              '^(utils)',
-              '^(types|constants)',
-              '^(config)',
+              '^(lib|utils)',
+              '^(types|constants|config)',
               '^\\.\\.(?!/?$)',
               '^\\.\\./?$',
               '^\\./(?=.*/)(?!/?$)',
@@ -73,19 +81,25 @@ export default [
       '!templates/**',
     ],
     plugins: {
-      'markdownlint': markdownlintPlugin
+      'markdownlint': markdownlintPlugin,
+      'stylistic': stylistic,
     },
     languageOptions: {
       parser: markdownlintParser
     },
     rules: {
       ...markdownlintPlugin.configs.recommended.rules,
+      "markdownlint/md012": "off", // Line length
       "markdownlint/md013": "off", // Line length
       "markdownlint/md024": "off", // Duplicate headings
       "markdownlint/md025": "off", // Single h1
       "markdownlint/md040": "off", // Fenced code language
       "markdownlint/md041": "off", // First line heading
       "markdownlint/md043": "off", // Required heading structure
+      // Stylistic rules for markdown (must come after markdownlint rules)
+      'stylistic/no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
+      'stylistic/no-trailing-spaces': 'error',
+      'stylistic/no-multi-spaces': ['error', { exceptions: { Property: true } }],
     }
   }
 ];

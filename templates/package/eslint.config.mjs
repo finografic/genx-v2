@@ -4,7 +4,6 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
-
 export default [
   js.configs.recommended,
 
@@ -32,6 +31,10 @@ export default [
       'no-unused-vars': 'off',
       'no-redeclare': 'off',
       'stylistic/semi': 'error',
+      'stylistic/indent': ['error', 2, { SwitchCase: 1 }],
+      'stylistic/no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
+      'stylistic/no-trailing-spaces': 'error',
+      'stylistic/no-multi-spaces': ['error', { exceptions: { Property: true } }],
 
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-redeclare': 'warn',
@@ -42,13 +45,17 @@ export default [
         'error',
         {
           groups: [
+            // Node.js built-ins (e.g. `node:path`)
+            ['^node:'],
+            // Internal/workspace packages
             ['^@finografic', '^@workspace'],
+            // Side effect imports
             ['^\\u0000'],
+            // External packages (e.g. `execa`, `picocolors`, `@types/*`)
+            ['^(?!@finografic)(?!@workspace)@?\\w'],
             [
-              '^(lib)',
-              '^(utils)',
-              '^(types|constants)',
-              '^(config)',
+              '^(lib|utils)',
+              '^(types|constants|config)',
               '^\\.\\.(?!/?$)',
               '^\\.\\./?$',
               '^\\./(?=.*/)(?!/?$)',
