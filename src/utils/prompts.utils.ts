@@ -3,7 +3,7 @@ import type { PackageConfig } from '@finografic/core';
 import * as clack from '@clack/prompts';
 import pc from 'picocolors';
 
-import { promptAuthor } from 'utils/steps/steps.utils';
+import { promptAuthor } from 'utils/steps/author.step';
 import { descriptionSchema, packageNameSchema, scopeSchema } from 'utils/validation.utils';
 import { defaultsConfig } from 'config/defaults.config';
 
