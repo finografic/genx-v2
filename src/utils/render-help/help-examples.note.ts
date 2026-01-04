@@ -2,7 +2,7 @@ import pc from 'picocolors';
 
 import { defaultHelpOptions } from 'config/help.config';
 import type { HelpNote, HelpNoteOptions, HelpNoteReturn } from 'types/help.types';
-import { padLines } from './help-padding.utils';
+import { padLines } from './padding.utils';
 
 interface ExamplesNoteProps {
   examples: HelpNote;
