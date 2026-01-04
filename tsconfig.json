@@ -25,6 +25,8 @@
       "config/*": ["./src/config/*"],
       "help/*": ["./src/help/*"],
       "help/utils/*": ["./src/help/utils/*"],
+      "prompts/*": ["./src/prompts/*"],
+      "steps/*": ["./src/steps/*"],
       "templates/*": ["./templates/*"],
       "types": ["./src/types"],
       "types/*": ["./src/types/*"],

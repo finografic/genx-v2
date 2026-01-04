@@ -15,13 +15,15 @@ import {
   infoMessage,
   intro,
   outro,
-  promptFeatures,
-  promptPackageConfig,
   spinner,
   successMessage,
   validateTargetDir,
 } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
+import { promptCreatePackage } from 'utils/prompts';
+
+// NOTE: This command never prompts directly.
+// All user input is collected via promptCreatePackage().
 
 /**
  * Create a new @finografic package from template.
@@ -36,24 +38,19 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
     infoMessage(`argv[1]: ${process.argv[1] ?? ''}`);
   }
 
-  // 1. Prompt for package configuration
-  const config = await promptPackageConfig();
+  // 1. Prompt for ALL creation input (manifest + author + features)
+  const config = await promptCreatePackage();
   if (!config) {
     safeExit(0);
     return;
   }
 
-  // 2. Prompt for optional features
-  const features = await promptFeatures();
-  if (!features) {
-    safeExit(0);
-    return;
-  }
+  const { features } = config;
 
-  // 3. Determine target directory
+  // 2. Determine target directory
   const targetDir = resolve(options.cwd, config.name);
 
-  // 4. Validate target directory
+  // 3. Validate target directory
   const validation = await validateTargetDir(targetDir);
   if (!validation.ok) {
     errorMessage(validation.reason || 'Target directory is not valid');
@@ -61,22 +58,14 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
     return;
   }
 
-  // 5. Build context (for future use)
-  // const _context: GeneratorContext = {
-  //   cwd: options.cwd,
-  //   targetDir,
-  //   config,
-  //   features,
-  // };
-
-  // 6. Copy template files
+  // 4. Copy template files
   const spin = spinner();
   spin.start('Creating project structure...');
 
   try {
     await ensureDir(targetDir);
 
-    // Resolve templates from package root (works in both `src/` (tsx) and bundled `dist/`)
+    // Resolve templates from package root
     const fromDir = fileURLToPath(new URL('.', import.meta.url));
     const packageRoot = findPackageRoot(fromDir);
     const templateDir = getTemplatesPackageDir(fromDir);
@@ -102,7 +91,9 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
     const vars = buildTemplateVars(config);
 
     await copyDir(templateDir, targetDir, vars, {
-      ignore: features.aiRules ? [] : ['.github/copilot-instructions.md', '.github/instructions'],
+      ignore: features.aiRules
+        ? []
+        : ['.github/copilot-instructions.md', '.github/instructions'],
     });
 
     spin.stop('Project structure created');
@@ -113,7 +104,7 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
     return;
   }
 
-  // 7. Install dependencies
+  // 5. Install dependencies
   const installSpin = spinner();
   installSpin.start('Installing dependencies...');
 
@@ -125,21 +116,23 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
     errorMessage('You can run `pnpm install` manually');
   }
 
-  // 8. Initialize git
+  // 6. Initialize git
   const gitSpin = spinner();
   gitSpin.start('Initializing git repository...');
 
   try {
     await execa('git', ['init'], { cwd: targetDir });
     await execa('git', ['add', '.'], { cwd: targetDir });
-    await execa('git', ['commit', '-m', 'chore: initial commit'], { cwd: targetDir });
+    await execa('git', ['commit', '-m', 'chore: initial commit'], {
+      cwd: targetDir,
+    });
     gitSpin.stop('Git repository initialized');
   } catch {
     gitSpin.stop('Failed to initialize git');
     errorMessage('You can initialize git manually');
   }
 
-  // 9. Done!
+  // 7. Done!
   successMessage('Package created successfully!');
 
   infoMessage('\nNext steps:');

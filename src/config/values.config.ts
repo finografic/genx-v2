@@ -1,4 +1,4 @@
-export const defaultsConfig = {
+export const defaultValuesConfig = {
   /** Default scope for new packages (accepts `finografic` or `@finografic`) */
   scope: '@finografic',
 
