@@ -78,12 +78,12 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
 
     // Resolve templates from package root (works in both `src/` (tsx) and bundled `dist/`)
     const fromDir = fileURLToPath(new URL('.', import.meta.url));
-    const pkgRoot = findPackageRoot(fromDir);
+    const packageRoot = findPackageRoot(fromDir);
     const templateDir = getTemplatesPackageDir(fromDir);
 
     if (debug) {
       infoMessage(`importMetaDir: ${fromDir}`);
-      infoMessage(`packageRoot: ${pkgRoot}`);
+      infoMessage(`packageRoot: ${packageRoot}`);
       infoMessage(`templateDir: ${templateDir}`);
     }
 
@@ -93,7 +93,7 @@ export async function createPackage(options: { cwd: string }): Promise<void> {
           'Template directory not found.',
           `templateDir: ${templateDir}`,
           `importMetaDir: ${fromDir}`,
-          `packageRoot: ${pkgRoot}`,
+          `packageRoot: ${packageRoot}`,
           'If running a linked build, re-run `pnpm build` in @finografic/create.',
         ].join('\n'),
       );

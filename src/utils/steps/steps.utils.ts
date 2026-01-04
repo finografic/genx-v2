@@ -1,4 +1,4 @@
-import * as p from '@clack/prompts';
+import * as clack from '@clack/prompts';
 
 import { emailSchema } from 'utils/validation.utils';
 
@@ -13,7 +13,7 @@ type AuthorField = 'name' | 'email' | 'url';
 export async function promptAuthor(
   defaults: Author,
 ): Promise<Author | null> {
-  const fields = await p.autocompleteMultiselect<AuthorField>({
+  const fields = await clack.autocompleteMultiselect<AuthorField>({
     message: 'Select author fields to edit',
     options: [
       { value: 'name', label: 'Name', hint: defaults.name },
@@ -24,8 +24,8 @@ export async function promptAuthor(
     initialValues: ['name', 'email', 'url'],
   });
 
-  if (p.isCancel(fields)) {
-    p.cancel('Operation cancelled');
+  if (clack.isCancel(fields)) {
+    clack.cancel('Operation cancelled');
     return null;
   }
 
@@ -37,17 +37,17 @@ export async function promptAuthor(
   let url = defaults.url;
 
   if (selected.has('name')) {
-    const value = await p.text({
+    const value = await clack.text({
       message: 'Author name:',
       initialValue: name,
     });
 
-    if (p.isCancel(value)) return cancel();
+    if (clack.isCancel(value)) return cancel();
     name = value;
   }
 
   if (selected.has('email')) {
-    const value = await p.text({
+    const value = await clack.text({
       message: 'Author email:',
       initialValue: email,
       validate: (v) =>
@@ -56,17 +56,17 @@ export async function promptAuthor(
           : 'Invalid email address',
     });
 
-    if (p.isCancel(value)) return cancel();
+    if (clack.isCancel(value)) return cancel();
     email = value;
   }
 
   if (selected.has('url')) {
-    const value = await p.text({
+    const value = await clack.text({
       message: 'Author URL:',
       initialValue: url,
     });
 
-    if (p.isCancel(value)) return cancel();
+    if (clack.isCancel(value)) return cancel();
     url = value;
   }
 
@@ -74,6 +74,6 @@ export async function promptAuthor(
 }
 
 function cancel(): null {
-  p.cancel('Operation cancelled');
+  clack.cancel('Operation cancelled');
   return null;
 }

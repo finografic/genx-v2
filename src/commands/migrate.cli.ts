@@ -82,12 +82,12 @@ function ensureKeyword(keywords: string[], kw: string): { keywords: string[]; ch
   return { keywords: [...keywords, kw], changed: true };
 }
 
-function patchPackageJson(pkg: PackageJson, packageNameWithoutScope: string): { pkg: PackageJson; changes: string[] } {
+function patchPackageJson(packageJson: PackageJson, packageNameWithoutScope: string): { packageJson: PackageJson; changes: string[] } {
   const changes: string[] = [];
-  const next: PackageJson = { ...pkg };
+  const next: PackageJson = { ...packageJson };
 
   // scripts
-  const scripts = { ...(pkg.scripts ?? {}) };
+  const scripts = { ...(packageJson.scripts ?? {}) };
   for (const [key, value] of Object.entries(migrateConfig.packageJson.ensureScripts)) {
     if (scripts[key] !== value) {
       scripts[key] = value;
@@ -97,7 +97,7 @@ function patchPackageJson(pkg: PackageJson, packageNameWithoutScope: string): { 
   next.scripts = scripts;
 
   // lint-staged
-  const lintStaged = { ...(pkg['lint-staged'] ?? {}) };
+  const lintStaged = { ...(packageJson['lint-staged'] ?? {}) };
   for (const [pattern, commands] of Object.entries(migrateConfig.packageJson.ensureLintStaged)) {
     const current = lintStaged[pattern];
     if (!Array.isArray(current) || current.join('\n') !== commands.join('\n')) {
@@ -108,19 +108,19 @@ function patchPackageJson(pkg: PackageJson, packageNameWithoutScope: string): { 
   next['lint-staged'] = lintStaged;
 
   // keywords
-  const keywordRaw = pkg.keywords;
+  const keywordRaw = packageJson.keywords;
   const keywords = Array.isArray(keywordRaw) ? (keywordRaw.filter((k) => typeof k === 'string') as string[]) : [];
   let changedKeywords = false;
 
-  const finKw = migrateConfig.packageJson.ensureKeywords.includeFinograficKeyword;
-  const r1 = ensureKeyword(keywords, finKw);
-  changedKeywords = changedKeywords || r1.changed;
+  const includeFinograficKeyword = migrateConfig.packageJson.ensureKeywords.includeFinograficKeyword;
+  const finograficKeywordResult = ensureKeyword(keywords, includeFinograficKeyword);
+  changedKeywords = changedKeywords || finograficKeywordResult.changed;
 
-  let updated = r1.keywords;
+  let updated = finograficKeywordResult.keywords;
   if (migrateConfig.packageJson.ensureKeywords.includePackageName) {
-    const r2 = ensureKeyword(updated, packageNameWithoutScope);
-    updated = r2.keywords;
-    changedKeywords = changedKeywords || r2.changed;
+    const packageNameKeywordResult = ensureKeyword(updated, packageNameWithoutScope);
+    updated = packageNameKeywordResult.keywords;
+    changedKeywords = changedKeywords || packageNameKeywordResult.changed;
   }
 
   if (changedKeywords) {
@@ -128,11 +128,11 @@ function patchPackageJson(pkg: PackageJson, packageNameWithoutScope: string): { 
     changes.push('keywords');
   }
 
-  return { pkg: next, changes };
+  return { packageJson: next, changes };
 }
 
-async function writePackageJson(path: string, pkg: PackageJson): Promise<void> {
-  const formatted = `${JSON.stringify(pkg, null, 2)}\n`;
+async function writePackageJson(path: string, packageJson: PackageJson): Promise<void> {
+  const formatted = `${JSON.stringify(packageJson, null, 2)}\n`;
   await writeFile(path, formatted, 'utf8');
 }
 
@@ -156,8 +156,8 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
   }
 
   const packageJsonPath = resolve(targetDir, 'package.json');
-  const pkg = await readPackageJson(packageJsonPath);
-  const parsed = getScopeAndName(pkg.name);
+  const packageJson = await readPackageJson(packageJsonPath);
+  const parsed = getScopeAndName(packageJson.name);
   if (!parsed) {
     errorMessage('Unable to read package name from package.json');
     safeExit(1);
@@ -183,7 +183,7 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
     PACKAGE_NAME: `${parsed.scope}/${parsed.name}`,
     YEAR: new Date().getFullYear().toString(),
     // These might not exist in every repo; template system leaves unknown tokens as-is.
-    DESCRIPTION: typeof pkg.description === 'string' ? pkg.description : '',
+    DESCRIPTION: typeof packageJson.description === 'string' ? packageJson.description : '',
     AUTHOR_NAME: '',
     AUTHOR_EMAIL: '',
     AUTHOR_URL: '',
@@ -193,7 +193,7 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
 
   // package.json patch plan
   if (isOnlyEnabled(only, 'package-json')) {
-    const { changes } = patchPackageJson(pkg, parsed.name);
+    const { changes } = patchPackageJson(packageJson, parsed.name);
     if (changes.length > 0) {
       plan.push(`patch package.json: ${changes.join(', ')}`);
     } else {
@@ -203,12 +203,12 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
 
   // template sync plan
   const fromDir = fileURLToPath(new URL('.', import.meta.url));
-  const pkgRoot = findPackageRoot(fromDir);
+  const packageRoot = findPackageRoot(fromDir);
   const templateDir = getTemplatesPackageDir(fromDir);
 
   if (debug) {
     infoMessage(`importMetaDir: ${fromDir}`);
-    infoMessage(`packageRoot: ${pkgRoot}`);
+    infoMessage(`packageRoot: ${packageRoot}`);
     infoMessage(`templateDir: ${templateDir}`);
   }
 
@@ -218,7 +218,7 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
         'Template directory not found.',
         `templateDir: ${templateDir}`,
         `importMetaDir: ${fromDir}`,
-        `packageRoot: ${pkgRoot}`,
+        `packageRoot: ${packageRoot}`,
         'If running a linked build, re-run `pnpm build` in @finografic/create.',
       ].join('\n'),
     );
@@ -242,9 +242,9 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
 
   // Apply package.json patch
   if (isOnlyEnabled(only, 'package-json')) {
-    const { pkg: nextPkg, changes } = patchPackageJson(pkg, parsed.name);
+    const { packageJson: nextPackageJson, changes } = patchPackageJson(packageJson, parsed.name);
     if (changes.length > 0) {
-      await writePackageJson(packageJsonPath, nextPkg);
+      await writePackageJson(packageJsonPath, nextPackageJson);
       successMessage(`Updated package.json (${changes.length} changes)`);
     } else {
       infoMessage('package.json already aligned');
@@ -259,19 +259,19 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
     syncSpin.start(`Syncing ${syncTasks.length} file(s) from template...`);
 
     for (const item of syncTasks) {
-      const src = resolve(templateDir, item.templatePath);
-      const dest = resolve(targetDir, item.targetPath);
+      const sourcePath = resolve(templateDir, item.templatePath);
+      const destinationPath = resolve(targetDir, item.targetPath);
 
       // Directory copy
       if (item.templatePath === 'docs') {
-        await ensureDir(dest);
-        await copyDir(src, dest, vars);
+        await ensureDir(destinationPath);
+        await copyDir(sourcePath, destinationPath, vars);
         continue;
       }
 
       // Ensure destination directory exists
-      await ensureDir(dirname(dest));
-      await copyTemplate(src, dest, vars);
+      await ensureDir(dirname(destinationPath));
+      await copyTemplate(sourcePath, destinationPath, vars);
     }
 
     syncSpin.stop(`Synced ${syncTasks.length} file(s)`);
