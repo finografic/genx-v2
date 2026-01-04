@@ -1,10 +1,10 @@
 import * as clack from '@clack/prompts';
 
 import type { HelpConfig } from 'types/help.types';
-import { renderCommandsNote } from './help-commands.utils';
-import { renderExamplesNote } from './help-examples.utils';
-import { renderFooterNote } from './help-footer.utils';
-import { renderMainSignature } from './help-main.utils';
+import { renderCommandsNote } from './help-commands.note';
+import { renderExamplesNote } from './help-examples.note';
+import { renderFooterNote } from './help-footer.note';
+import { renderMainSignature } from './help-main.note';
 
 export function renderHelp({ main, commands, examples, footer, minWidth }: HelpConfig): void {
   console.clear();

@@ -21,6 +21,7 @@ Rule Files
 - ESLint & Style: [.github/instructions/04-eslint-code-style.instructions.md](.github/instructions/04-eslint-code-style.instructions.md)
 - Documentation: [.github/instructions/05-documentation.instructions.md](.github/instructions/05-documentation.instructions.md)
 - Modern TS Patterns: [.github/instructions/06-modern-typescript-patterns.instructions.md](.github/instructions/06-modern-typescript-patterns.instructions.md)
+- Variable Naming: [.github/instructions/07-variable-naming.instructions.md](.github/instructions/07-variable-naming.instructions.md)
 
 Maintenance
 
