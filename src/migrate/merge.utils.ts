@@ -93,7 +93,7 @@ function mergePackageJson(existingRaw: string, templateRaw: string): string {
 /**
  * Shallow merge (simple object spread).
  */
-function shallowMerge(existing: string, template: string): string {
+function shallowMerge(_existing: string, template: string): string {
   // For non-JSON files, just return template
   // This is a placeholder - implement per file type if needed
   return template;
@@ -102,7 +102,7 @@ function shallowMerge(existing: string, template: string): string {
 /**
  * Deep merge (recursive object merge).
  */
-function deepMerge(existing: string, template: string): string {
+function deepMerge(_existing: string, template: string): string {
   // For non-JSON files, just return template
   // This is a placeholder - implement per file type if needed
   return template;
