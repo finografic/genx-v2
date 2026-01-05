@@ -5,14 +5,43 @@ import { fileURLToPath } from 'node:url';
 import * as clack from '@clack/prompts';
 import { parseMigrateArgs } from 'migrate/migrate-metadata.utils';
 import pc from 'picocolors';
-import { confirmMigrateTarget } from 'prompts/migrate.prompt';
+import {
+  confirmMerges,
+  confirmMigrateTarget,
+  confirmNodeVersionUpgrade,
+} from 'prompts/migrate.prompt';
+import {
+  applyDependencyChanges,
+  planDependencyChanges,
+} from 'src/migrate/dependencies.utils';
+import {
+  applyMerges,
+  planMerges,
+} from 'src/migrate/merge.utils';
 import { getScopeAndName, shouldRunSection } from 'src/migrate/migrate-metadata.utils';
+import {
+  applyNodeRuntimeChanges,
+  applyNodeTypesChange,
+  detectCurrentNodeState,
+  detectNodeMajor,
+  planNodeRuntimeChanges,
+  planNodeTypesChange,
+} from 'src/migrate/node.utils';
 import { patchPackageJson, readPackageJson, writePackageJson } from 'src/migrate/package-json.utils';
+import {
+  applyRenames,
+  getExistingFiles,
+  planRenames,
+} from 'src/migrate/rename.utils';
 
 import { copyDir, copyTemplate, ensureDir, errorMessage, findPackageRoot, getTemplatesPackageDir, infoMessage, intro, successMessage } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
+import { dependencyRules } from 'config/dependencies.config';
+import { mergeConfig } from 'config/merge.config';
 import { migrateConfig } from 'config/migrate.config';
+import { nodePolicy } from 'config/node.config';
+import { renameRules } from 'config/rename.config';
 import type { TemplateVars } from 'types/template.types';
 
 export async function migratePackage(argv: string[], options: { cwd: string }): Promise<void> {
@@ -77,10 +106,67 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
     }
   }
 
-  // template sync plan
+  // Get template directory early (needed for merge planning)
   const fromDir = fileURLToPath(new URL('.', import.meta.url));
   const packageRoot = findPackageRoot(fromDir);
   const templateDir = getTemplatesPackageDir(fromDir);
+
+  // Dependencies planning
+  if (shouldRunSection(only, 'dependencies')) {
+    const depChanges = planDependencyChanges(packageJson, dependencyRules);
+    if (depChanges.length > 0) {
+      plan.push(`dependencies: ${depChanges.map((c) => `${c.name} (${c.operation})`).join(', ')}`);
+    }
+  }
+
+  // Node version planning
+  let currentNodeState: Awaited<ReturnType<typeof detectCurrentNodeState>> | null = null;
+  let nodeRuntimeChanges: ReturnType<typeof planNodeRuntimeChanges> = [];
+  let nodeTypesChange: ReturnType<typeof planNodeTypesChange> = null;
+  if (shouldRunSection(only, 'node')) {
+    currentNodeState = await detectCurrentNodeState(targetDir);
+    nodeRuntimeChanges = planNodeRuntimeChanges(currentNodeState, nodePolicy);
+    nodeTypesChange = planNodeTypesChange(
+      (packageJson.devDependencies as Record<string, string> | undefined)?.['@types/node'],
+      nodePolicy,
+    );
+    if (nodeRuntimeChanges.length > 0 || nodeTypesChange) {
+      plan.push('node version updates');
+    }
+  }
+
+  // Renames planning
+  let existingFiles: Set<string> | null = null;
+  let renameChanges: ReturnType<typeof planRenames> = [];
+  if (shouldRunSection(only, 'renames')) {
+    existingFiles = await getExistingFiles(targetDir, renameRules);
+    renameChanges = planRenames(existingFiles, renameRules);
+    if (renameChanges.length > 0) {
+      plan.push(`renames: ${renameChanges.map((r) => `${r.from} → ${r.to}`).join(', ')}`);
+    }
+  }
+
+  // Merges planning
+  // Note: Merge planning needs to be aware of pending renames
+  // If a file will be renamed to the canonical name, treat it as existing
+  let mergeChanges: ReturnType<typeof planMerges> = [];
+  if (shouldRunSection(only, 'merges')) {
+    if (existingFiles === null) {
+      existingFiles = await getExistingFiles(targetDir, renameRules);
+    }
+    // Create a set that includes files that will exist after renames
+    const filesAfterRenames = new Set(existingFiles);
+    for (const rename of renameChanges) {
+      filesAfterRenames.delete(rename.from);
+      filesAfterRenames.add(rename.to);
+    }
+    mergeChanges = planMerges(filesAfterRenames, mergeConfig, templateDir);
+    if (mergeChanges.length > 0) {
+      plan.push(`merges: ${mergeChanges.map((m) => m.file).join(', ')}`);
+    }
+  }
+
+  // template sync plan
 
   if (debug) {
     infoMessage(`importMetaDir: ${fromDir}`);
@@ -116,15 +202,78 @@ export async function migratePackage(argv: string[], options: { cwd: string }): 
     return;
   }
 
+  // Prompts before applying changes
+  // 1. Node version prompt (if major version changes)
+  if (shouldRunSection(only, 'node') && currentNodeState) {
+    const currentMajor = detectNodeMajor(currentNodeState.nvmrc || '');
+    if (currentMajor !== null && currentMajor !== nodePolicy.major) {
+      const confirmed = await confirmNodeVersionUpgrade({
+        from: currentMajor,
+        to: nodePolicy.major,
+        nvmrc: nodePolicy.local.nvmrc,
+      });
+      if (!confirmed) {
+        safeExit(0);
+        return;
+      }
+    }
+  }
+
+  // 2. Merge prompt (if merges exist)
+  if (shouldRunSection(only, 'merges') && mergeChanges.length > 0) {
+    const confirmed = await confirmMerges(mergeChanges);
+    if (!confirmed) {
+      safeExit(0);
+      return;
+    }
+  }
+
+  // Apply renames FIRST (before other operations)
+  if (shouldRunSection(only, 'renames') && renameChanges.length > 0) {
+    await applyRenames(targetDir, renameChanges);
+    successMessage(`Renamed ${renameChanges.length} file(s)`);
+  }
+
   // Apply package.json patch
+  let updatedPackageJson = packageJson;
   if (shouldRunSection(only, 'package-json')) {
     const { packageJson: nextPackageJson, changes } = patchPackageJson(packageJson, parsed.name);
     if (changes.length > 0) {
-      await writePackageJson(packageJsonPath, nextPackageJson);
+      updatedPackageJson = nextPackageJson;
+      await writePackageJson(packageJsonPath, updatedPackageJson);
       successMessage(`Updated package.json (${changes.length} changes)`);
     } else {
       infoMessage('package.json already aligned');
     }
+  }
+
+  // Apply node version changes
+  if (shouldRunSection(only, 'node')) {
+    if (nodeRuntimeChanges.length > 0) {
+      await applyNodeRuntimeChanges(targetDir, nodeRuntimeChanges);
+      successMessage('Updated Node version files');
+    }
+    if (nodeTypesChange) {
+      updatedPackageJson = applyNodeTypesChange(updatedPackageJson, nodeTypesChange);
+      await writePackageJson(packageJsonPath, updatedPackageJson);
+      successMessage('Updated @types/node');
+    }
+  }
+
+  // Apply dependency changes
+  if (shouldRunSection(only, 'dependencies')) {
+    const depChanges = planDependencyChanges(updatedPackageJson, dependencyRules);
+    if (depChanges.length > 0) {
+      updatedPackageJson = applyDependencyChanges(updatedPackageJson, depChanges);
+      await writePackageJson(packageJsonPath, updatedPackageJson);
+      successMessage(`Updated ${depChanges.length} dependencies`);
+    }
+  }
+
+  // Apply merges
+  if (shouldRunSection(only, 'merges') && mergeChanges.length > 0) {
+    await applyMerges(targetDir, mergeChanges, templateDir, vars);
+    successMessage(`Merged ${mergeChanges.length} file(s)`);
   }
 
   // Apply template sync

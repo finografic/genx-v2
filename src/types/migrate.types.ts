@@ -1,4 +1,14 @@
-export type MigrateOnlySection = 'package-json' | 'hooks' | 'nvmrc' | 'eslint' | 'workflows' | 'docs';
+export type MigrateOnlySection =
+  | 'package-json'
+  | 'hooks'
+  | 'nvmrc'
+  | 'eslint'
+  | 'workflows'
+  | 'docs'
+  | 'dependencies'
+  | 'node'
+  | 'renames'
+  | 'merges';
 
 export type MigrateConfig = {
   /** Default scope expected for existing @finografic packages */

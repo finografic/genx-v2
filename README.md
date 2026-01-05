@@ -88,9 +88,13 @@ pnpm dlx @finografic/create migrate --help
 **Available `--only` sections:**
 
 - `package-json` - Update scripts, lint-staged, keywords
+- `dependencies` - Align dependencies to canonical versions
+- `node` - Update Node version (`.nvmrc`, GitHub Actions, `@types/node`)
+- `renames` - Normalize file names (e.g., `.eslintrc` → `eslint.config.ts`)
+- `merges` - Merge template files with existing files
 - `hooks` - Sync `.simple-git-hooks.mjs`
 - `nvmrc` - Sync `.nvmrc` (Node version)
-- `eslint` - Sync `eslint.config.ts`
+- `eslint` - Sync `eslint.config.ts` and `src/declarations.d.ts`
 - `workflows` - Sync `.github/workflows/release.yml`
 - `docs` - Sync `docs/` directory
 
@@ -99,9 +103,12 @@ pnpm dlx @finografic/create migrate --help
 - Package.json scripts (test, lint, release, etc.)
 - lint-staged configuration
 - Keywords (ensures `finografic` and package name)
+- Dependencies (aligns versions to canonical policy)
+- Node version (`.nvmrc`, GitHub Actions workflow, `@types/node`)
+- File normalization (renames alternative config files to canonical names)
+- File merging (intelligently merges template files with existing content)
 - Git hooks configuration
-- Node version (`.nvmrc`)
-- ESLint configuration
+- ESLint configuration and TypeScript declarations
 - GitHub release workflow
 - Documentation files
 

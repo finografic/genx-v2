@@ -18,3 +18,28 @@ export async function confirmMigrateTarget(pkg: {
   if (clack.isCancel(ok) || ok === false) return cancel();
   return true;
 }
+
+export async function confirmNodeVersionUpgrade(params: {
+  from: number;
+  to: number;
+  nvmrc: string;
+}): Promise<boolean | null> {
+  const ok = await clack.confirm({
+    message: `Detected Node v${params.from} → migrate runtime to ${pc.cyan(params.nvmrc)}?`,
+    initialValue: true,
+  });
+
+  if (clack.isCancel(ok) || ok === false) return cancel();
+  return true;
+}
+
+export async function confirmMerges(files: Array<{ file: string }>): Promise<boolean | null> {
+  const fileList = files.map((f) => pc.cyan(f.file)).join(', ');
+  const ok = await clack.confirm({
+    message: `The following ${files.length} file(s) will be merged: ${fileList}. Continue?`,
+    initialValue: true,
+  });
+
+  if (clack.isCancel(ok) || ok === false) return cancel();
+  return true;
+}
