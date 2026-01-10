@@ -23,6 +23,7 @@ import {
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { promptCreatePackage } from 'utils/prompts';
 import { renderHelp } from 'utils/render-help/render-help.utils';
+import { createConfig } from 'config/create.config';
 
 // NOTE: This command never prompts directly.
 // All user input is collected via promptCreatePackage().
@@ -102,7 +103,7 @@ export async function createPackage( argv: string[],
     await copyDir(templateDir, targetDir, vars, {
       ignore: features.aiRules
         ? []
-        : ['.github/copilot-instructions.md', '.github/instructions'],
+        : createConfig.ignorePatterns.aiRules,
     });
 
     spin.stop('Project structure created');

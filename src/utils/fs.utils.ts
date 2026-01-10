@@ -42,15 +42,28 @@ export async function copyDir(
     ignore?: string[];
   } = {},
 ): Promise<void> {
+  return copyDirInternal(src, dest, vars, options, src);
+}
+
+async function copyDirInternal(
+  currentSrc: string,
+  currentDest: string,
+  vars: TemplateVars,
+  options: {
+    templateExtensions?: string[];
+    ignore?: string[];
+  },
+  rootSrc: string,
+): Promise<void> {
   const { templateExtensions = ['.json', '.ts', '.md', '.yml', '.yaml', '.mjs', '.js'], ignore = [] } =
     options;
 
-  const entries = await readdir(src, { withFileTypes: true });
+  const entries = await readdir(currentSrc, { withFileTypes: true });
 
   for (const entry of entries) {
-    const srcPath = join(src, entry.name);
-    const destPath = join(dest, entry.name);
-    const relativePath = relative(src, srcPath);
+    const srcPath = join(currentSrc, entry.name);
+    const destPath = join(currentDest, entry.name);
+    const relativePath = relative(rootSrc, srcPath);
 
     // Skip ignored paths
     if (ignore.some((pattern) => relativePath.startsWith(pattern))) {
@@ -59,7 +72,7 @@ export async function copyDir(
 
     if (entry.isDirectory()) {
       await mkdir(destPath, { recursive: true });
-      await copyDir(srcPath, destPath, vars, options);
+      await copyDirInternal(srcPath, destPath, vars, options, rootSrc);
     } else if (entry.isFile()) {
       const shouldTemplate = templateExtensions.some((ext) => entry.name.endsWith(ext));
 
