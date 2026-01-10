@@ -35,6 +35,11 @@
       "utils/*": ["./src/utils/*"]
     }
   },
-  "include": ["src/**/*", "eslint.config.ts"],
+  "include": [
+    "src/**/*",
+    "eslint.config.ts",
+    "templates/package/eslint.config.ts",
+    "templates/package/src/declarations.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
