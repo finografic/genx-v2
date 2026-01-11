@@ -47,7 +47,10 @@
     "·········· LINTING": "···················································",
     "lint": "eslint .",
     "lint.fix": "eslint . --fix",
-    "·········· PUBLISH.GITHUB": "·····················································",
+    "·········· FORMATTING": "················································",
+    "format": "dprint fmt --diff",
+    "format.check": "dprint check",
+    "·········· PUBLISH.GITHUB": "············································",
     "release.github.patch": "pnpm run release.check && pnpm version patch && git push --follow-tags",
     "release.github.minor": "pnpm run release.check && pnpm version minor && git push --follow-tags",
     "release.github.major": "pnpm run release.check && pnpm version major && git push --follow-tags",
@@ -55,6 +58,8 @@
     "·········· REGISTRIES": "··············································",
     "view.registry.github": "pnpm view __PACKAGE_NAME__ --registry=https://npm.pkg.github.com",
     "·········· PACKAGES": "··················································",
+    "update.eslint-config": "pnpm update @finografic/eslint-config --latest",
+    "update.dprint-config": "pnpm update @finografic/dprint-config --latest",
     "update.project-scripts": "pnpm update @finografic/core --latest",
     "upgrade.deps.all": "pnpm update --latest",
     "·········· UTILS": "·····················································",
@@ -65,7 +70,8 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "@finografic/core": "^0.9.2"
+    "@finografic/core": "^0.9.2",
+    "@finografic/dprint-config": "^0.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",

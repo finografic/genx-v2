@@ -1,4 +1,4 @@
-# __PACKAGE_NAME__
+# 🦋 __PACKAGE_NAME__
 
 > __DESCRIPTION__
 

@@ -108,7 +108,7 @@ const config: Linter.Config[] = [
       'dist/**',
       '.cursor/chat/**',
       '.github/instructions/**',
-      '!templates/**',
+      'templates/**/*.md',
     ],
     languageOptions: {
       parser: markdownlintParser,
