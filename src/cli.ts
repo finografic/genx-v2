@@ -4,6 +4,7 @@ import process from 'node:process';
 
 import { renderHelp } from 'utils/render-help/render-help.utils.js';
 import { createPackage } from './commands/create.cli.js';
+import { addFeatures } from './commands/features.cli.js';
 import { migratePackage } from './commands/migrate.cli.js';
 import { rootHelp } from './help/root.help.js';
 import { safeExit } from './utils/env.utils.js';
@@ -36,6 +37,10 @@ async function main(): Promise<void> {
 
     migrate: async (argv, ctx) => {
       await migratePackage(argv, ctx);
+    },
+
+    features: async (argv, ctx) => {
+      await addFeatures(argv, ctx);
     },
 
     help: () => {

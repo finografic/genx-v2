@@ -35,7 +35,7 @@ import {
   planRenames,
 } from 'src/migrate/rename.utils';
 
-import { copyDir, copyTemplate, ensureDir, errorMessage, fileExists, findPackageRoot, getTemplatesPackageDir, infoMessage, intro, renderHelp, successMessage } from 'utils';
+import { copyDir, copyTemplate, ensureDir, ensureDprintConfig, errorMessage, fileExists, findPackageRoot, getTemplatesPackageDir, infoMessage, intro, renderHelp, successMessage } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
 import { dependencyRules } from 'config/dependencies.rules';
@@ -207,6 +207,17 @@ export async function migratePackage(argv: string[], context: { cwd: string }): 
     plan.push(`${pc.cyan('sync')} LICENSE (from template LICENSE)`);
   }
 
+  // dprint planning
+  if (shouldRunSection(only, 'dprint')) {
+    const dprintPath = resolve(targetDir, 'dprint.jsonc');
+    const dprintExists = fileExists(dprintPath);
+    if (!dprintExists) {
+      plan.push(`${pc.cyan('dprint')}: create dprint.jsonc`);
+    } else {
+      plan.push('dprint.jsonc already exists');
+    }
+  }
+
   // Dry-run default
   if (!write) {
     infoMessage(`\nDry run. Planned changes for: ${pc.cyan(targetDir)}\n`);
@@ -323,6 +334,16 @@ export async function migratePackage(argv: string[], context: { cwd: string }): 
     const licenseDestPath = resolve(targetDir, 'LICENSE');
     await copyTemplate(licenseSourcePath, licenseDestPath, vars);
     successMessage('Added LICENSE file');
+  }
+
+  // Apply dprint config
+  if (shouldRunSection(only, 'dprint')) {
+    const result = await ensureDprintConfig(targetDir);
+    if (result.wrote) {
+      successMessage('Created dprint.jsonc');
+    } else {
+      infoMessage('dprint.jsonc already exists');
+    }
   }
 
   successMessage('Migration complete');

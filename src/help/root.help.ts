@@ -12,6 +12,7 @@ export const rootHelp: HelpConfig = {
     list: [
       { label: 'create', description: 'Scaffold a new @finografic package' },
       { label: 'migrate', description: 'Sync conventions to an existing package' },
+      { label: 'features', description: 'Add optional features to an existing package' },
       { label: 'help', description: 'Show this help message' },
     ],
     options: {
@@ -33,6 +34,10 @@ export const rootHelp: HelpConfig = {
       {
         label: 'Migrate only specific sections',
         description: 'finografic-create migrate --only=package-json,eslint --write',
+      },
+      {
+        label: 'Add features to current directory',
+        description: 'finografic-create features',
       },
     ],
   },

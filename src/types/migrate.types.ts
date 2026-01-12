@@ -3,6 +3,7 @@ export type MigrateOnlySection =
   | 'hooks'
   | 'nvmrc'
   | 'eslint'
+  | 'dprint'
   | 'workflows'
   | 'docs'
   | 'dependencies'
