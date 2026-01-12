@@ -15,8 +15,8 @@ importers:
         specifier: ^0.9.2
         version: 0.9.2
       '@finografic/dprint-config':
-        specifier: ^0.4.0
-        version: 0.4.0(dprint@0.51.1)
+        specifier: ^0.5.0
+        version: 0.5.0(dprint@0.51.1)
       clack-tree-select:
         specifier: ^1.0.8
         version: 1.0.8(@clack/prompts@1.0.0-alpha.9)
@@ -448,8 +448,8 @@ packages:
   '@finografic/core@0.9.2':
     resolution: {integrity: sha512-pvery4Vsi8WNprrD1FDq7pEl4VnTfkuUURK+VF/x7XSWc0RCunQKQwxbpo8tn0/7LG12D1TOQUTm61hoi9TjQw==, tarball: https://npm.pkg.github.com/download/@finografic/core/0.9.2/1c2a1033b2d6a4adc5ae33abd5abdb392daf0707}
 
-  '@finografic/dprint-config@0.4.0':
-    resolution: {integrity: sha512-kHegMquNQIAZIb+UN+o1fS6QZtrO9OqAMltuE80qBjH2ju7qNkIOQslyQ1eWhNkhmXfFYLp0H6X5/Ln7jA+EEg==, tarball: https://npm.pkg.github.com/download/@finografic/dprint-config/0.4.0/3194b1c6d42923f5d3906f7d82031e6a5b3d0f17}
+  '@finografic/dprint-config@0.5.0':
+    resolution: {integrity: sha512-1Fv3AytqPv4pKBnkZpsc3GPFaXb3577OQSFIIKdd6jXKUUMIP6mxDR/zGh8tyQEtGKY/LzR25A3dZWt5b//RzQ==, tarball: https://npm.pkg.github.com/download/@finografic/dprint-config/0.5.0/e197af6a599269b2a86373627fdd0b4a6541fc67}
     peerDependencies:
       dprint: ^0.51.1
 
@@ -2530,7 +2530,7 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  '@finografic/dprint-config@0.4.0(dprint@0.51.1)':
+  '@finografic/dprint-config@0.5.0(dprint@0.51.1)':
     dependencies:
       dprint: 0.51.1
 

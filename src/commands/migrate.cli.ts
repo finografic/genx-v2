@@ -11,14 +11,8 @@ import {
   confirmMigrateTarget,
   confirmNodeVersionUpgrade,
 } from 'prompts/migrate.prompt';
-import {
-  applyDependencyChanges,
-  planDependencyChanges,
-} from 'src/migrate/dependencies.utils';
-import {
-  applyMerges,
-  planMerges,
-} from 'src/migrate/merge.utils';
+import { applyDependencyChanges, planDependencyChanges } from 'src/migrate/dependencies.utils';
+import { applyMerges, planMerges } from 'src/migrate/merge.utils';
 import { getScopeAndName, shouldRunSection } from 'src/migrate/migrate-metadata.utils';
 import {
   applyNodeRuntimeChanges,
@@ -28,14 +22,27 @@ import {
   planNodeRuntimeChanges,
   planNodeTypesChange,
 } from 'src/migrate/node.utils';
-import { patchPackageJson, readPackageJson, writePackageJson } from 'src/migrate/package-json.utils';
 import {
-  applyRenames,
-  getExistingFiles,
-  planRenames,
-} from 'src/migrate/rename.utils';
+  patchPackageJson,
+  readPackageJson,
+  writePackageJson,
+} from 'src/migrate/package-json.utils';
+import { applyRenames, getExistingFiles, planRenames } from 'src/migrate/rename.utils';
 
-import { copyDir, copyTemplate, ensureDir, ensureDprintConfig, errorMessage, fileExists, findPackageRoot, getTemplatesPackageDir, infoMessage, intro, renderHelp, successMessage } from 'utils';
+import {
+  copyDir,
+  copyTemplate,
+  ensureDir,
+  ensureDprintConfig,
+  errorMessage,
+  fileExists,
+  findPackageRoot,
+  getTemplatesPackageDir,
+  infoMessage,
+  intro,
+  renderHelp,
+  successMessage,
+} from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
 import { dependencyRules } from 'config/dependencies.rules';
@@ -45,8 +52,7 @@ import { nodePolicy } from 'config/node.policy';
 import { renameRules } from 'config/rename.rules';
 import type { TemplateVars } from 'types/template.types';
 
-export async function migratePackage(argv: string[], context: { cwd: string }): Promise<void> {
-
+export async function migratePackage(argv: string[], context: { cwd: string; }): Promise<void> {
   if (argv.includes('--help') || argv.includes('-h')) {
     renderHelp(migrateHelp);
     return;
@@ -122,7 +128,11 @@ export async function migratePackage(argv: string[], context: { cwd: string }): 
   if (shouldRunSection(only, 'dependencies')) {
     const depChanges = planDependencyChanges(packageJson, dependencyRules);
     if (depChanges.length > 0) {
-      plan.push(`${pc.cyan('dependencies')}: ${depChanges.map((c) => `${c.name} (${c.operation})`).join(', ')}`);
+      plan.push(
+        `${pc.cyan('dependencies')}: ${
+          depChanges.map((c) => `${c.name} (${c.operation})`).join(', ')
+        }`,
+      );
     }
   }
 
@@ -149,7 +159,9 @@ export async function migratePackage(argv: string[], context: { cwd: string }): 
     existingFiles = await getExistingFiles(targetDir, renameRules);
     renameChanges = planRenames(existingFiles, renameRules);
     if (renameChanges.length > 0) {
-      plan.push(`${pc.yellow('renames')}: ${renameChanges.map((r) => `${r.from} → ${r.to}`).join(', ')}`);
+      plan.push(
+        `${pc.yellow('renames')}: ${renameChanges.map((r) => `${r.from} → ${r.to}`).join(', ')}`,
+      );
     }
   }
 
@@ -303,7 +315,9 @@ export async function migratePackage(argv: string[], context: { cwd: string }): 
   }
 
   // Apply template sync
-  const syncTasks = migrateConfig.syncFromTemplate.filter((item) => shouldRunSection(only, item.section));
+  const syncTasks = migrateConfig.syncFromTemplate.filter((item) =>
+    shouldRunSection(only, item.section),
+  );
 
   if (syncTasks.length > 0) {
     const syncSpin = clack.spinner();

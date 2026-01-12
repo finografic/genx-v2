@@ -128,4 +128,3 @@ import * as prompts from '@clack/prompts';
 - ❌ Avoid `src`/`dest` in regular code (use `sourcePath`/`destinationPath`)
 - ❌ Never use reserved words: `package`, `class`, `function`, etc.
 - ✅ Always use `clack` for `@clack/prompts` imports
-

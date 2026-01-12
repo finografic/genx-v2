@@ -1,7 +1,12 @@
 import * as clack from '@clack/prompts';
 
 import type { HelpConfig } from 'types/help.types';
-import { renderCommandsNote, renderExamplesNote, renderFooterNote, renderMainSignature } from './help-notes.utils';
+import {
+  renderCommandsNote,
+  renderExamplesNote,
+  renderFooterNote,
+  renderMainSignature,
+} from './help-notes.utils';
 
 export function renderHelp({ main, commands, examples, footer, minWidth }: HelpConfig): void {
   console.clear();
@@ -12,17 +17,17 @@ export function renderHelp({ main, commands, examples, footer, minWidth }: HelpC
 
   // Commands box
   if (commands) {
-    clack.note( ...renderCommandsNote({ commands, minWidth }));
+    clack.note(...renderCommandsNote({ commands, minWidth }));
   }
 
   // Examples box
   if (examples) {
-    clack.note( ...renderExamplesNote({ examples, minWidth }));
+    clack.note(...renderExamplesNote({ examples, minWidth }));
   }
 
   // Help footer
   if (footer) {
-    clack.note( ...renderFooterNote({ footer, minWidth }));
+    clack.note(...renderFooterNote({ footer, minWidth }));
   }
 
   // Outro

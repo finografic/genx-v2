@@ -1,6 +1,6 @@
-# 🦋 __PACKAGE_NAME__
+# 🦋 **PACKAGE_NAME**
 
-> __DESCRIPTION__
+> **DESCRIPTION**
 
 ## Installation
 
@@ -11,7 +11,7 @@ pnpm add __PACKAGE_NAME__
 ## Usage
 
 ```typescript
-import { } from '__PACKAGE_NAME__';
+import {} from '__PACKAGE_NAME__';
 ```
 
 ## Development
@@ -33,8 +33,8 @@ pnpm test.run
 pnpm lint
 ```
 
-__Note:__ Git hooks are automatically configured on `pnpm install`. See [docs/DEVELOPER_WORKFLOW.md](./docs/DEVELOPER_WORKFLOW.md) for the complete workflow.
+**Note:** Git hooks are automatically configured on `pnpm install`. See [docs/DEVELOPER_WORKFLOW.md](./docs/DEVELOPER_WORKFLOW.md) for the complete workflow.
 
 ## License
 
-MIT © [__AUTHOR_NAME__](__AUTHOR_URL__)
+MIT © [**AUTHOR_NAME**](__AUTHOR_URL__)

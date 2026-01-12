@@ -53,8 +53,10 @@ async function copyDirInternal(
   },
   rootSrc: string,
 ): Promise<void> {
-  const { templateExtensions = ['.json', '.ts', '.md', '.yml', '.yaml', '.mjs', '.js'], ignore = [] } =
-    options;
+  const {
+    templateExtensions = ['.json', '.ts', '.md', '.yml', '.yaml', '.mjs', '.js'],
+    ignore = [],
+  } = options;
 
   const entries = await readdir(currentSrc, { withFileTypes: true });
 

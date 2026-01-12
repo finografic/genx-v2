@@ -38,21 +38,24 @@ export const sharedConfig: SharedConfig = {
    * These match what's in templates/package/package.json.
    */
   packageJsonScripts: {
-    'test': 'vitest',
+    test: 'vitest',
     'test.run': 'vitest run',
     'test.coverage': 'vitest run --coverage',
-    'lint': 'eslint .',
+    lint: 'eslint .',
     'lint.fix': 'eslint . --fix',
-    'format': 'dprint fmt --diff',
+    format: 'dprint fmt --diff',
     'format.check': 'dprint check',
-    'typecheck': 'tsc --project tsconfig.json --noEmit',
+    typecheck: 'tsc --project tsconfig.json --noEmit',
     'tsc.debug': 'tsc --pretty --project tsconfig.json',
     'release.check': 'pnpm format.check && pnpm lint.fix && pnpm typecheck && pnpm test.run',
-    'release.github.patch': 'pnpm run release.check && pnpm version patch && git push --follow-tags',
-    'release.github.minor': 'pnpm run release.check && pnpm version minor && git push --follow-tags',
-    'release.github.major': 'pnpm run release.check && pnpm version major && git push --follow-tags',
-    'prepack': 'pnpm build',
-    'prepare': 'simple-git-hooks',
+    'release.github.patch':
+      'pnpm run release.check && pnpm version patch && git push --follow-tags',
+    'release.github.minor':
+      'pnpm run release.check && pnpm version minor && git push --follow-tags',
+    'release.github.major':
+      'pnpm run release.check && pnpm version major && git push --follow-tags',
+    prepack: 'pnpm build',
+    prepare: 'simple-git-hooks',
   },
 
   /**

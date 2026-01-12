@@ -152,11 +152,11 @@ pnpm test.coverage # vitest run --coverage
 
 **Why the distinction?**
 
-| Context     | Command         | Behavior                                |
-| ----------- | --------------- | --------------------------------------- |
+| Context     | Command         | Behavior                               |
+| ----------- | --------------- | -------------------------------------- |
 | Development | `pnpm test`     | ⏱️ Watch mode - re-runs on file changes |
-| Releases    | `pnpm test.run` | ✅ Runs once and exits - doesn't block  |
-| CI/CD       | `pnpm test.run` | ✅ Runs once and exits                  |
+| Releases    | `pnpm test.run` | ✅ Runs once and exits - doesn't block |
+| CI/CD       | `pnpm test.run` | ✅ Runs once and exits                 |
 
 **Important:** `vitest` alone enters watch mode when run from terminal, but `vitest run` always runs once and exits. Use `test.run` in scripts that need to continue after tests complete.
 

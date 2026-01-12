@@ -2,14 +2,7 @@ import { featuresHelp } from 'help/features.help';
 import pc from 'picocolors';
 import { promptFeatures } from 'prompts/features.prompt';
 
-import {
-  ensureDprintConfig,
-  errorMessage,
-  infoMessage,
-  intro,
-  outro,
-  successMessage,
-} from 'utils';
+import { ensureDprintConfig, errorMessage, infoMessage, intro, outro, successMessage } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { renderHelp } from 'utils/render-help/render-help.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
@@ -22,7 +15,7 @@ import { validateExistingPackage } from 'utils/validation.utils';
  */
 export async function addFeatures(
   argv: string[],
-  context: { cwd: string },
+  context: { cwd: string; },
 ): Promise<void> {
   if (argv.includes('--help') || argv.includes('-h')) {
     renderHelp(featuresHelp);

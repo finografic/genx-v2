@@ -9,7 +9,7 @@ import { migratePackage } from './commands/migrate.cli.js';
 import { rootHelp } from './help/root.help.js';
 import { safeExit } from './utils/env.utils.js';
 
-type CommandHandler = (argv: string[], ctx: { cwd: string }) => Promise<void> | void;
+type CommandHandler = (argv: string[], ctx: { cwd: string; }) => Promise<void> | void;
 
 async function main(): Promise<void> {
   const cwd = process.cwd();

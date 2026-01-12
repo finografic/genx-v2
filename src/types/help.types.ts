@@ -30,4 +30,4 @@ export interface HelpNoteOptions {
   };
 }
 
-export type HelpNoteReturn = [string, string, { format: (line: string) => string }];
+export type HelpNoteReturn = [string, string, { format: (line: string) => string; }];

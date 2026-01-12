@@ -134,13 +134,13 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 # CRITICAL: These exact three permissions are required!
 permissions:
-  contents: write   # Create releases
-  packages: write   # Publish packages
-  actions: write    # Update workflows
+  contents: write # Create releases
+  packages: write # Publish packages
+  actions: write # Update workflows
 
 jobs:
   publish:
@@ -151,7 +151,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           registry-url: https://npm.pkg.github.com
-          scope: '@finografic'
+          scope: "@finografic"
 
       # CRITICAL: Use NPM_TOKEN for installing (if consuming other @finografic packages)
       - name: Install deps

@@ -16,7 +16,10 @@ export async function readPackageJson(path: string): Promise<PackageJson> {
   return JSON.parse(raw) as PackageJson;
 }
 
-export function patchPackageJson(packageJson: PackageJson, packageNameWithoutScope: string): { packageJson: PackageJson; changes: string[] } {
+export function patchPackageJson(
+  packageJson: PackageJson,
+  packageNameWithoutScope: string,
+): { packageJson: PackageJson; changes: string[]; } {
   const changes: string[] = [];
   const next: PackageJson = { ...packageJson };
 
@@ -43,10 +46,13 @@ export function patchPackageJson(packageJson: PackageJson, packageNameWithoutSco
 
   // keywords
   const keywordRaw = packageJson.keywords;
-  const keywords = Array.isArray(keywordRaw) ? (keywordRaw.filter((k) => typeof k === 'string') as string[]) : [];
+  const keywords = Array.isArray(keywordRaw)
+    ? (keywordRaw.filter((k) => typeof k === 'string') as string[])
+    : [];
   let changedKeywords = false;
 
-  const includeFinograficKeyword = migrateConfig.packageJson.ensureKeywords.includeFinograficKeyword;
+  const includeFinograficKeyword =
+    migrateConfig.packageJson.ensureKeywords.includeFinograficKeyword;
   const finograficKeywordResult = ensureKeyword(keywords, includeFinograficKeyword);
   changedKeywords = changedKeywords || finograficKeywordResult.changed;
 

@@ -20,7 +20,7 @@ export interface EnsureDprintConfigOptions {
 export async function ensureDprintConfig(
   targetDir: string,
   options: EnsureDprintConfigOptions = {},
-): Promise<{ wrote: boolean; path: string }> {
+): Promise<{ wrote: boolean; path: string; }> {
   const path = join(targetDir, DPRINT_CONFIG_FILENAME);
 
   if (!options.force && fileExists(path)) {

@@ -5,7 +5,8 @@ import type { HelpConfig, HelpNote, HelpNoteOptions, HelpNoteReturn } from 'type
 import { padLines, padValue } from './padding.utils';
 
 export function renderMainSignature(main: HelpConfig['main']): string {
-  return pc.bold(pc.cyanBright(main.bin)) + (main.args ? ` ${pc.bold(pc.whiteBright(main.args))}` : '');
+  return pc.bold(pc.cyanBright(main.bin))
+    + (main.args ? ` ${pc.bold(pc.whiteBright(main.args))}` : '');
 }
 
 interface CommandsNoteProps {
@@ -14,7 +15,9 @@ interface CommandsNoteProps {
   options?: HelpNoteOptions;
 }
 
-export function renderCommandsNote({ commands, minWidth, options }: CommandsNoteProps): HelpNoteReturn {
+export function renderCommandsNote(
+  { commands, minWidth, options }: CommandsNoteProps,
+): HelpNoteReturn {
   const title = commands.title;
   const labelWidth = options?.labels.minWidth ?? defaultHelpOptions.labels.minWidth;
 
@@ -37,7 +40,9 @@ interface ExamplesNoteProps {
   options?: HelpNoteOptions;
 }
 
-export function renderExamplesNote({ examples, minWidth = defaultHelpOptions.minWidth }: ExamplesNoteProps): HelpNoteReturn {
+export function renderExamplesNote(
+  { examples, minWidth = defaultHelpOptions.minWidth }: ExamplesNoteProps,
+): HelpNoteReturn {
   const title = examples.title;
   const content = examples.list
     .map((example) => {
@@ -64,7 +69,9 @@ interface FooterNoteProps {
   options?: HelpNoteOptions;
 }
 
-export function renderFooterNote({ footer, minWidth = defaultHelpOptions.minWidth }: FooterNoteProps): HelpNoteReturn {
+export function renderFooterNote(
+  { footer, minWidth = defaultHelpOptions.minWidth }: FooterNoteProps,
+): HelpNoteReturn {
   const title = footer.title;
   const content = footer.list
     .map((item) =>

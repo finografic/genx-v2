@@ -3,9 +3,9 @@ import * as clack from '@clack/prompts';
 import { emailSchema } from 'utils/validation.utils';
 
 export type Author = {
-  name: string
-  email: string
-  url: string
+  name: string;
+  email: string;
+  url: string;
 };
 
 type AuthorField = 'name' | 'email' | 'url';

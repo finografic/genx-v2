@@ -37,7 +37,9 @@ export const emailSchema = z.string().email({ message: 'Invalid email address' }
 /**
  * Check if a directory is safe to use as a project target.
  */
-export async function validateTargetDir(targetPath: string): Promise<{ ok: boolean; reason?: string }> {
+export async function validateTargetDir(
+  targetPath: string,
+): Promise<{ ok: boolean; reason?: string; }> {
   if (fileExists(targetPath)) {
     const packageJsonPath = join(targetPath, 'package.json');
     if (fileExists(packageJsonPath)) {
@@ -51,7 +53,7 @@ export async function validateTargetDir(targetPath: string): Promise<{ ok: boole
 /**
  * Check if current directory is a valid package for "apply" commands.
  */
-export function validateExistingPackage(cwd: string): { ok: boolean; reason?: string } {
+export function validateExistingPackage(cwd: string): { ok: boolean; reason?: string; } {
   const packageJsonPath = join(cwd, 'package.json');
 
   if (!fileExists(packageJsonPath)) {
