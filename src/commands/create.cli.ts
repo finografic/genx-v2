@@ -10,6 +10,7 @@ import {
   buildTemplateVars,
   copyDir,
   ensureDir,
+  ensureDprintConfig,
   errorMessage,
   findPackageRoot,
   getTemplatesPackageDir,
@@ -104,6 +105,12 @@ export async function createPackage( argv: string[],
         ? []
         : createConfig.ignorePatterns.aiRules,
     });
+
+    // Generate dprint.jsonc (do not store this in templates/ to avoid dprint
+    // resolving node_modules paths inside the template directory)
+    if (features.dprint) {
+      await ensureDprintConfig(targetDir);
+    }
 
     spin.stop('Project structure created');
   } catch (err) {

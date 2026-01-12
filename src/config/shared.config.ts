@@ -43,9 +43,11 @@ export const sharedConfig: SharedConfig = {
     'test.coverage': 'vitest run --coverage',
     'lint': 'eslint .',
     'lint.fix': 'eslint . --fix',
+    'format': 'dprint fmt --diff',
+    'format.check': 'dprint check',
     'typecheck': 'tsc --project tsconfig.json --noEmit',
     'tsc.debug': 'tsc --pretty --project tsconfig.json',
-    'release.check': 'pnpm lint.fix && pnpm typecheck && pnpm test.run',
+    'release.check': 'pnpm format.check && pnpm lint.fix && pnpm typecheck && pnpm test.run',
     'release.github.patch': 'pnpm run release.check && pnpm version patch && git push --follow-tags',
     'release.github.minor': 'pnpm run release.check && pnpm version minor && git push --follow-tags',
     'release.github.major': 'pnpm run release.check && pnpm version major && git push --follow-tags',
@@ -57,7 +59,7 @@ export const sharedConfig: SharedConfig = {
    * lint-staged configuration that should be present in all @finografic packages.
    */
   lintStaged: {
-    '*.{ts,tsx,js,mjs,cjs}': ['eslint --fix'],
+    '*.{ts,tsx,js,mjs,cjs,json,jsonc,md,yml,yaml}': ['dprint fmt', 'eslint --fix'],
   },
 
   /**
