@@ -32,6 +32,7 @@ const config: Linter.Config[] = [
       globals: {
         console: 'readonly',
         process: 'readonly',
+        fetch: 'readonly',
         URL: 'readonly',
       },
     },

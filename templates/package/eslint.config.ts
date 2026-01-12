@@ -15,7 +15,7 @@ const config: Linter.Config[] = [
   // tseslint.configs.stylisticTypeChecked, // ref: https://typescript-eslint.io/getting-started/typed-linting
 
   {
-    ignores: [ 'dist/**', 'node_modules/**', '.cursor/**' ],
+    ignores: ['dist/**', 'node_modules/**', '.cursor/**'],
   },
 
   {
@@ -32,13 +32,14 @@ const config: Linter.Config[] = [
       globals: {
         console: 'readonly',
         process: 'readonly',
+        fetch: 'readonly',
         URL: 'readonly',
       },
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       'simple-import-sort': simpleImportSort,
-      'stylistic': stylistic,
+      stylistic: stylistic,
     },
     rules: {
       // Disable base rules in favor of TS-aware ones
@@ -50,13 +51,13 @@ const config: Linter.Config[] = [
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          'args': 'all',
-          'argsIgnorePattern': '^_',
-          'caughtErrors': 'all',
-          'caughtErrorsIgnorePattern': '^_',
-          'destructuredArrayIgnorePattern': '^_',
-          'varsIgnorePattern': '^_',
-          'ignoreRestSiblings': true,
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
 
@@ -74,7 +75,11 @@ const config: Linter.Config[] = [
       'stylistic/comma-dangle': ['error', 'always-multiline'],
       'stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
       'stylistic/arrow-spacing': ['error', { before: true, after: true }],
-      'stylistic/type-annotation-spacing': ['error', { 'before': false, 'after': true, 'overrides': { 'arrow': { 'before': true, 'after': true } } } ],
+      'stylistic/type-annotation-spacing': ['error', {
+        before: false,
+        after: true,
+        overrides: { arrow: { before: true, after: true } },
+      }],
 
       // Import sorting
       'simple-import-sort/imports': [
@@ -114,8 +119,8 @@ const config: Linter.Config[] = [
       parser: markdownlintParser,
     },
     plugins: {
-      'markdownlint': markdownlintPlugin,
-      'stylistic': stylistic,
+      markdownlint: markdownlintPlugin,
+      stylistic: stylistic,
     },
     rules: {
       ...markdownlintPlugin.configs.recommended.rules,
