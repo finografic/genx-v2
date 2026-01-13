@@ -1,5 +1,7 @@
+import { aiRulesFeature } from './ai-rules';
 import { dprintFeature } from './dprint';
 import type { Feature, FeatureId } from './feature.types';
+import { vitestFeature } from './vitest';
 
 /**
  * Registry of all available features.
@@ -7,10 +9,10 @@ import type { Feature, FeatureId } from './feature.types';
  */
 export const features: Feature[] = [
   dprintFeature,
+  vitestFeature,
+  aiRulesFeature,
   // TODO: Add other features as they are migrated:
-  // vitestFeature,
   // githubWorkflowFeature,
-  // aiRulesFeature,
 ];
 
 /**

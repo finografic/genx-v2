@@ -1,9 +1,10 @@
+import type { FeatureId } from 'features/feature.types';
 import { getFeature } from 'features/feature-registry';
 import { featuresHelp } from 'help/features.help';
 import pc from 'picocolors';
 import { promptFeatures } from 'prompts/features.prompt';
 
-import { errorMessage, infoMessage, intro, outro } from 'utils';
+import { errorMessage, infoMessage, intro, outro, outroDim } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { renderHelp } from 'utils/render-help/render-help.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
@@ -46,7 +47,8 @@ export async function addFeatures(
   }
 
   // 3. Apply selected features
-  const applied: string[] = [];
+  const appliedFeatures: FeatureId[] = [];
+  const noopMessages: string[] = [];
 
   for (const featureId of selectedFeatureIds) {
     const feature = getFeature(featureId);
@@ -55,20 +57,42 @@ export async function addFeatures(
       continue;
     }
 
+    if (feature.detect) {
+      const detected = await feature.detect({ targetDir });
+      if (detected) {
+        noopMessages.push(
+          `${feature.label} already installed. No changes made.`,
+        );
+        continue;
+      }
+    }
+
     const result = await feature.apply({ targetDir });
     if (result.error) {
       safeExit(1);
       return;
     }
 
-    applied.push(...result.applied);
+    if (result.applied.length > 0) {
+      appliedFeatures.push(featureId);
+    } else {
+      noopMessages.push(
+        result.noopMessage ?? `${feature.label} already installed. No changes made.`,
+      );
+    }
   }
 
   // 4. Done
-  if (applied.length > 0) {
+  if (appliedFeatures.length > 0) {
     outro('Features added successfully!');
-    console.log(pc.dim('Applied features:'), pc.cyan(applied.join(', ')));
+    console.log(pc.dim('Applied features:'), pc.cyan(appliedFeatures.join(', ')));
+    for (const msg of noopMessages) {
+      console.log(pc.dim(msg));
+    }
   } else {
-    outro('No new features to add');
+    outroDim('No changes made');
+    for (const msg of noopMessages) {
+      console.log(pc.dim(msg));
+    }
   }
 }

@@ -17,6 +17,8 @@ export interface FeatureContext {
 export interface FeatureApplyResult {
   /** List of items that were applied (for user feedback) */
   applied: string[];
+  /** Optional message when nothing was changed */
+  noopMessage?: string;
   /** Error if application failed */
   error?: Error;
 }

@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { errorMessage, infoMessage, installDevDependency, spinner, successMessage } from 'utils';
+import { errorMessage, installDevDependency, isDependencyDeclared, spinner, successMessage } from 'utils';
+import { PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER, PACKAGE_JSON_SCRIPTS_SECTION_PREFIX } from 'config/constants.config';
 import type { PackageJson } from 'types/package-json.types';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
@@ -9,7 +10,7 @@ import {
   DPRINT_PACKAGE_VERSION,
   FORMATTING_SCRIPTS,
   FORMATTING_SECTION_TITLE,
-} from './dprint.config';
+} from './dprint.constants';
 import { ensureDprintConfig } from './dprint.template';
 
 /**
@@ -48,7 +49,7 @@ function findFormattingInsertionPoint(scripts: Record<string, string>): number {
     for (let i = lintingIndex + 1; i < scriptKeys.length; i++) {
       const key = scriptKeys[i];
       // Stop if we hit another section title
-      if (key.startsWith('··········')) {
+      if (key.startsWith(PACKAGE_JSON_SCRIPTS_SECTION_PREFIX)) {
         break;
       }
       insertAfter = i;
@@ -96,7 +97,7 @@ async function addFormattingScripts(
 
   // Insert formatting section
   if (!hasFormattingSectionTitle(scripts)) {
-    newScripts[FORMATTING_SECTION_TITLE] = '················································';
+    newScripts[FORMATTING_SECTION_TITLE] = PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER;
     changes.push(`scripts.${FORMATTING_SECTION_TITLE}`);
   }
 
@@ -127,20 +128,22 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   const applied: string[] = [];
 
   // 1. Install @finografic/dprint-config
-  const installSpin = spinner();
-  installSpin.start(`Installing ${DPRINT_PACKAGE}...`);
   try {
-    const installResult = await installDevDependency(context.targetDir, DPRINT_PACKAGE, DPRINT_PACKAGE_VERSION);
-    installSpin.stop(
-      installResult.installed
-        ? `Installed ${DPRINT_PACKAGE}`
-        : `${DPRINT_PACKAGE} already installed`,
-    );
-    if (installResult.installed) {
-      applied.push(DPRINT_PACKAGE);
+    const alreadyDeclared = await isDependencyDeclared(context.targetDir, DPRINT_PACKAGE);
+    if (!alreadyDeclared) {
+      const installSpin = spinner();
+      installSpin.start(`Installing ${DPRINT_PACKAGE}...`);
+      const installResult = await installDevDependency(context.targetDir, DPRINT_PACKAGE, DPRINT_PACKAGE_VERSION);
+      installSpin.stop(
+        installResult.installed
+          ? `Installed ${DPRINT_PACKAGE}`
+          : `${DPRINT_PACKAGE} already installed`,
+      );
+      if (installResult.installed) {
+        applied.push(DPRINT_PACKAGE);
+      }
     }
   } catch (err) {
-    installSpin.stop(`Failed to install ${DPRINT_PACKAGE}`);
     const error = err instanceof Error ? err : new Error('Unknown error');
     errorMessage(error.message);
     return { applied, error };
@@ -151,8 +154,6 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   if (result.wrote) {
     applied.push('dprint.jsonc');
     successMessage('Created dprint.jsonc');
-  } else {
-    infoMessage('dprint.jsonc already exists');
   }
 
   // 3. Add formatting scripts to package.json
@@ -161,8 +162,10 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   if (scriptsResult.added) {
     applied.push('formatting scripts');
     successMessage('Added formatting scripts to package.json');
-  } else {
-    infoMessage('Formatting scripts already exist in package.json');
+  }
+
+  if (applied.length === 0) {
+    return { applied, noopMessage: 'dprint already installed. No changes made.' };
   }
 
   return { applied };

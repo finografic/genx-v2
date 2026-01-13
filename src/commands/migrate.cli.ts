@@ -232,11 +232,11 @@ export async function migratePackage(argv: string[], context: { cwd: string; }):
 
   // Dry-run default
   if (!write) {
-    infoMessage(`\nDry run. Planned changes for: ${pc.cyan(targetDir)}\n`);
+    infoMessage(`\nDRY RUN. Planned changes for:\n${pc.cyan(targetDir)}\n`);
     for (const line of plan) {
       clack.log.info(`- ${line}`);
     }
-    infoMessage('\nRe-run with `--write` to apply.\n');
+    infoMessage(`${pc.greenBright('DRY RUN COMPLETE.')}\n\n${pc.white('Re-run with')} ${pc.greenBright('--write')} ${pc.white('to apply changes.')}\n`);
     return;
   }
 

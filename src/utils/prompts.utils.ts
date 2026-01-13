@@ -9,6 +9,10 @@ export function outro(message: string): void {
   clack.outro(pc.green(message));
 }
 
+export function outroDim(message: string): void {
+  clack.outro(pc.dim(message));
+}
+
 export function errorMessage(message: string): void {
   clack.log.error(pc.red(message));
 }
