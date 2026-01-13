@@ -8,15 +8,12 @@ import { isDevelopment, safeExit } from 'utils/env.utils';
 import { renderHelp } from 'utils/render-help/render-help.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
 
-// NOTE: This command never prompts directly.
-// All user input is collected via promptFeatures().
-
 /**
  * Add optional features to an existing @finografic package.
  */
 export async function addFeatures(
   argv: string[],
-  context: { cwd: string; },
+  options: { targetDir: string },
 ): Promise<void> {
   if (argv.includes('--help') || argv.includes('-h')) {
     renderHelp(featuresHelp);
@@ -31,8 +28,9 @@ export async function addFeatures(
     infoMessage(`argv[1]: ${process.argv[1] ?? ''}`);
   }
 
+  const { targetDir } = options;
+
   // 1. Validate we're in an existing package
-  const targetDir = context.cwd;
   const validation = validateExistingPackage(targetDir);
   if (!validation.ok) {
     errorMessage(validation.reason || 'Not a valid package directory');
@@ -49,7 +47,6 @@ export async function addFeatures(
 
   // 3. Apply selected features
   const applied: string[] = [];
-  const ctx = { targetDir };
 
   for (const featureId of selectedFeatureIds) {
     const feature = getFeature(featureId);
@@ -58,15 +55,16 @@ export async function addFeatures(
       continue;
     }
 
-    const result = await feature.apply(ctx);
+    const result = await feature.apply({ targetDir });
     if (result.error) {
       safeExit(1);
       return;
     }
+
     applied.push(...result.applied);
   }
 
-  // 4. Done!
+  // 4. Done
   if (applied.length > 0) {
     outro('Features added successfully!');
     console.log(pc.dim('Applied features:'), pc.cyan(applied.join(', ')));

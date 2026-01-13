@@ -9,7 +9,7 @@ import { migratePackage } from './commands/migrate.cli.js';
 import { rootHelp } from './help/root.help.js';
 import { safeExit } from './utils/env.utils.js';
 
-type CommandHandler = (argv: string[], ctx: { cwd: string; }) => Promise<void> | void;
+type CommandHandler = (argv: string[], context: { cwd: string; }) => Promise<void> | void;
 
 async function main(): Promise<void> {
   const cwd = process.cwd();
@@ -31,16 +31,16 @@ async function main(): Promise<void> {
   /* ────────────────────────────────────────────────────────── */
 
   const commands: Record<string, CommandHandler> = {
-    create: async (argv, ctx) => {
-      await createPackage(argv, ctx);
+    create: async (argv, context) => {
+      await createPackage(argv, context);
     },
 
-    migrate: async (argv, ctx) => {
-      await migratePackage(argv, ctx);
+    migrate: async (argv, context) => {
+      await migratePackage(argv, context);
     },
 
-    features: async (argv, ctx) => {
-      await addFeatures(argv, ctx);
+    features: async (argv, context) => {
+      await addFeatures(argv, { targetDir: context.cwd });
     },
 
     help: () => {

@@ -39,11 +39,11 @@ export interface Feature {
    * Optional detection function to check if feature is already present.
    * Returns true if feature is detected, false otherwise.
    */
-  detect?: (ctx: FeatureContext) => boolean | Promise<boolean>;
+  detect?: (context: FeatureContext) => boolean | Promise<boolean>;
 
   /**
    * Apply the feature to the target directory.
    * This is where the feature's side effects happen.
    */
-  apply: (ctx: FeatureContext) => Promise<FeatureApplyResult>;
+  apply: (context: FeatureContext) => Promise<FeatureApplyResult>;
 }

@@ -123,14 +123,14 @@ async function addFormattingScripts(
  * Apply dprint feature to an existing package.
  * Installs @finografic/dprint-config, creates dprint.jsonc, and adds formatting scripts.
  */
-export async function applyDprint(ctx: FeatureContext): Promise<FeatureApplyResult> {
+export async function applyDprint(context: FeatureContext): Promise<FeatureApplyResult> {
   const applied: string[] = [];
 
   // 1. Install @finografic/dprint-config
   const installSpin = spinner();
   installSpin.start(`Installing ${DPRINT_PACKAGE}...`);
   try {
-    const installResult = await installDevDependency(ctx.targetDir, DPRINT_PACKAGE, DPRINT_PACKAGE_VERSION);
+    const installResult = await installDevDependency(context.targetDir, DPRINT_PACKAGE, DPRINT_PACKAGE_VERSION);
     installSpin.stop(
       installResult.installed
         ? `Installed ${DPRINT_PACKAGE}`
@@ -147,7 +147,7 @@ export async function applyDprint(ctx: FeatureContext): Promise<FeatureApplyResu
   }
 
   // 2. Create dprint.jsonc
-  const result = await ensureDprintConfig(ctx.targetDir);
+  const result = await ensureDprintConfig(context.targetDir);
   if (result.wrote) {
     applied.push('dprint.jsonc');
     successMessage(`Created ${result.path}`);
@@ -156,7 +156,7 @@ export async function applyDprint(ctx: FeatureContext): Promise<FeatureApplyResu
   }
 
   // 3. Add formatting scripts to package.json
-  const packageJsonPath = resolve(ctx.targetDir, 'package.json');
+  const packageJsonPath = resolve(context.targetDir, 'package.json');
   const scriptsResult = await addFormattingScripts(packageJsonPath);
   if (scriptsResult.added) {
     applied.push('formatting scripts');
