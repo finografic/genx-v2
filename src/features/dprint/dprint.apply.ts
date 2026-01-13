@@ -150,9 +150,9 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   const result = await ensureDprintConfig(context.targetDir);
   if (result.wrote) {
     applied.push('dprint.jsonc');
-    successMessage(`Created ${result.path}`);
+    successMessage('Created dprint.jsonc');
   } else {
-    infoMessage(`dprint.jsonc already exists at ${result.path}`);
+    infoMessage('dprint.jsonc already exists');
   }
 
   // 3. Add formatting scripts to package.json
@@ -160,9 +160,7 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   const scriptsResult = await addFormattingScripts(packageJsonPath);
   if (scriptsResult.added) {
     applied.push('formatting scripts');
-    successMessage(
-      `Added formatting scripts to package.json: ${scriptsResult.changes.join(', ')}`,
-    );
+    successMessage('Added formatting scripts to package.json');
   } else {
     infoMessage('Formatting scripts already exist in package.json');
   }
