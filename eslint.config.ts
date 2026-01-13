@@ -119,7 +119,7 @@ const config: Linter.Config[] = [
       parser: markdownlintParser,
     },
     plugins: {
-      markdownlint: markdownlintPlugin,
+      markdownlint: markdownlintPlugin as Linter.Processor,
       stylistic: stylistic,
     },
     rules: {

@@ -5,10 +5,6 @@ import markdownlintPlugin from 'eslint-plugin-markdownlint';
 import markdownlintParser from 'eslint-plugin-markdownlint/parser.js';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
-// eslint-plugin-markdownlint's exported `configs` use numeric severities, which
-// currently don't satisfy ESLint v9's TS `Plugin` config typings.
-const markdownlintPluginCompat = markdownlintPlugin as Linter.Processor;
-
 // NOTE: ALL @typescript-eslint/eslint-plugin (over 100 rules))
 // https://typescript-eslint.io/rules/
 import tseslint from 'typescript-eslint';
@@ -123,7 +119,7 @@ const config: Linter.Config[] = [
       parser: markdownlintParser,
     },
     plugins: {
-      markdownlint: markdownlintPluginCompat,
+      markdownlint: markdownlintPlugin as Linter.Processor,
       stylistic: stylistic,
     },
     rules: {
