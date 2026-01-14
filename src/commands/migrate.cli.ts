@@ -14,6 +14,7 @@ import {
   confirmMerges,
   confirmMigrateTarget,
   confirmNodeVersionUpgrade,
+  confirmReleasesRename,
 } from 'prompts/migrate.prompt';
 import { applyDependencyChanges, planDependencyChanges } from 'src/migrate/dependencies.utils';
 import { applyMerges, planMerges } from 'src/migrate/merge.utils';
@@ -332,6 +333,58 @@ export async function migratePackage(argv: string[], context: { cwd: string; }):
   if (shouldRunSection(only, 'merges') && mergeChanges.length > 0) {
     await applyMerges(targetDir, mergeChanges, templateDir, vars);
     successMessage(`Merged ${mergeChanges.length} file(s)`);
+  }
+
+  // Restructure docs/ folder (if docs section is enabled)
+  // This runs BEFORE template sync to avoid overwriting existing restructured files
+  if (shouldRunSection(only, 'docs')) {
+    const docsDir = resolve(targetDir, 'docs');
+    const docsProcessDir = resolve(targetDir, 'docs/process');
+
+    // Check if docs/ exists
+    if (existsSync(docsDir)) {
+      // Check if docs/process/ already exists with files - if so, skip restructuring
+      const processDirExists = existsSync(docsProcessDir);
+      const releaseProcessExists = fileExists(resolve(docsProcessDir, 'RELEASE_PROCESS.md'));
+      const developerWorkflowExists = fileExists(resolve(docsProcessDir, 'DEVELOPER_WORKFLOW.md'));
+      const githubPackagesExists = fileExists(resolve(docsProcessDir, 'GITHUB_PACKAGES_SETUP.md'));
+
+      // If all files already exist in docs/process/, skip restructuring (silent abort)
+      if (processDirExists && releaseProcessExists && developerWorkflowExists && githubPackagesExists) {
+        // Silent abort - structure already correct
+      } else {
+        // Ensure docs/process/ exists
+        await ensureDir(docsProcessDir);
+
+        // Files to move from docs/ to docs/process/
+        const filesToMove = [
+          { from: 'DEVELOPER_WORKFLOW.md', to: 'DEVELOPER_WORKFLOW.md' },
+          { from: 'GITHUB_PACKAGES_SETUP.md', to: 'GITHUB_PACKAGES_SETUP.md' },
+          { from: 'RELEASES.md', to: 'RELEASE_PROCESS.md' },
+        ];
+
+        // Check and move files
+        for (const file of filesToMove) {
+          const sourcePath = resolve(docsDir, file.from);
+          const destPath = resolve(docsProcessDir, file.to);
+
+          // Only move if source exists and destination doesn't
+          if (fileExists(sourcePath) && !fileExists(destPath)) {
+            // Special handling for RELEASES.md: prompt for confirmation
+            if (file.from === 'RELEASES.md') {
+              const confirmed = await confirmReleasesRename();
+              if (!confirmed) {
+                infoMessage(`Skipped renaming ${file.from}`);
+                continue;
+              }
+            }
+
+            await rename(sourcePath, destPath);
+            infoMessage(`Moved ${file.from} → docs/process/${file.to}`);
+          }
+        }
+      }
+    }
   }
 
   // Apply template sync
