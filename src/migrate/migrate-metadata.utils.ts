@@ -53,7 +53,7 @@ export function shouldRunSection(
 
 export function getScopeAndName(
   pkgName: string | undefined,
-): { scope: string; name: string; } | null {
+): { scope: string; name: string } | null {
   if (!pkgName) return null;
   if (pkgName.startsWith('@') && pkgName.includes('/')) {
     const [scope, name] = pkgName.split('/');
@@ -65,7 +65,7 @@ export function getScopeAndName(
 export function ensureKeyword(
   keywords: string[],
   keyword: string,
-): { keywords: string[]; changed: boolean; } {
+): { keywords: string[]; changed: boolean } {
   if (keywords.some((k) => k.toLowerCase() === keyword.toLowerCase())) {
     return { keywords, changed: false };
   }

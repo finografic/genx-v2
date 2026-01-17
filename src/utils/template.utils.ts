@@ -26,7 +26,7 @@ export function buildTemplateVars(config: {
   name: string;
   scope: string;
   description: string;
-  author: { name: string; email: string; url: string; };
+  author: { name: string; email: string; url: string };
 }): TemplateVars {
   const scopeWithAt = config.scope.startsWith('@') ? config.scope : `@${config.scope}`;
   return {

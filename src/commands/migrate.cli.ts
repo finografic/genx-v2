@@ -39,7 +39,7 @@ import { migrateConfig } from 'config/migrate.config';
 import { nodePolicy } from 'config/node.policy';
 import type { TemplateVars } from 'types/template.types';
 
-export async function migratePackage(argv: string[], context: { cwd: string; }): Promise<void> {
+export async function migratePackage(argv: string[], context: { cwd: string }): Promise<void> {
   if (argv.includes('--help') || argv.includes('-h')) {
     renderHelp(migrateHelp);
     return;

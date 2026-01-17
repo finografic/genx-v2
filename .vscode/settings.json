@@ -19,7 +19,7 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
     },
-    "files.trimTrailingWhitespace": true,
+    "files.trimTrailingWhitespace": false,
     "files.insertFinalNewline": true
   },
   "[javascriptreact]": {
@@ -36,7 +36,7 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "dprint.dprint",
-    "files.trimTrailingWhitespace": true,
+    "files.trimTrailingWhitespace": false,
     "files.insertFinalNewline": true,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"

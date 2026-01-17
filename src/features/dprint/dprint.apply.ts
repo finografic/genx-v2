@@ -1,8 +1,17 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { errorMessage, installDevDependency, isDependencyDeclared, spinner, successMessage } from 'utils';
-import { PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER, PACKAGE_JSON_SCRIPTS_SECTION_PREFIX } from 'config/constants.config';
+import {
+  errorMessage,
+  installDevDependency,
+  isDependencyDeclared,
+  spinner,
+  successMessage,
+} from 'utils';
+import {
+  PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER,
+  PACKAGE_JSON_SCRIPTS_SECTION_PREFIX,
+} from 'config/constants.config';
 import type { PackageJson } from 'types/package-json.types';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
@@ -133,7 +142,11 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
     if (!alreadyDeclared) {
       const installSpin = spinner();
       installSpin.start(`Installing ${DPRINT_PACKAGE}...`);
-      const installResult = await installDevDependency(context.targetDir, DPRINT_PACKAGE, DPRINT_PACKAGE_VERSION);
+      const installResult = await installDevDependency(
+        context.targetDir,
+        DPRINT_PACKAGE,
+        DPRINT_PACKAGE_VERSION,
+      );
       installSpin.stop(
         installResult.installed
           ? `Installed ${DPRINT_PACKAGE}`

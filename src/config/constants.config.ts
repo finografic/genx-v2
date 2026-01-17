@@ -2,4 +2,5 @@
 
 export const PACKAGE_JSON_SCRIPTS_SECTION_PREFIX = '··········';
 
-export const PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER = '················································';
+export const PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER =
+  '················································';

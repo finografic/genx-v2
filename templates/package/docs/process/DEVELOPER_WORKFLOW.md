@@ -89,8 +89,8 @@ pnpm release.github.patch  # or .minor or .major
   "scripts": {
     // Development
     "dev": "tsdown --watch",
-    "test": "vitest",                    // Watch mode
-    "test.run": "vitest run",            // Run once (CI/releases)
+    "test": "vitest", // Watch mode
+    "test.run": "vitest run", // Run once (CI/releases)
 
     // Quality checks
     "lint": "eslint .",

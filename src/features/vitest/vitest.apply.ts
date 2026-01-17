@@ -2,9 +2,19 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { errorMessage, fileExists, installDevDependency, isDependencyDeclared, spinner, successMessage } from 'utils';
+import {
+  errorMessage,
+  fileExists,
+  installDevDependency,
+  isDependencyDeclared,
+  spinner,
+  successMessage,
+} from 'utils';
 import { findPackageRoot } from 'utils/package-root.utils';
-import { PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER, PACKAGE_JSON_SCRIPTS_SECTION_PREFIX } from 'config/constants.config';
+import {
+  PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER,
+  PACKAGE_JSON_SCRIPTS_SECTION_PREFIX,
+} from 'config/constants.config';
 import type { PackageJson } from 'types/package-json.types';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
