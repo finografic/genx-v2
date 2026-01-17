@@ -61,3 +61,19 @@ export async function installDevDependency(
     throw error;
   }
 }
+
+/**
+ * Remove a package from dependencies and devDependencies using pnpm.
+ * Only call when the package is known to be declared (e.g. after isDependencyDeclared).
+ */
+export async function removeDependency(
+  targetDir: string,
+  packageName: string,
+): Promise<{ removed: boolean }> {
+  if (!(await isDependencyDeclared(targetDir, packageName))) {
+    return { removed: false };
+  }
+
+  await execa('pnpm', ['remove', packageName], { cwd: targetDir });
+  return { removed: true };
+}

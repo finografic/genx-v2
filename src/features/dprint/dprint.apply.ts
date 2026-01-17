@@ -1,10 +1,12 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { readFile, rename, writeFile } from 'node:fs/promises';
+import { basename, extname, resolve } from 'node:path';
 
 import {
   errorMessage,
+  fileExists,
   installDevDependency,
   isDependencyDeclared,
+  removeDependency,
   spinner,
   successMessage,
 } from 'utils';
@@ -19,8 +21,111 @@ import {
   DPRINT_PACKAGE_VERSION,
   FORMATTING_SCRIPTS,
   FORMATTING_SECTION_TITLE,
+  PRETTIER_CONFIG_FILES,
+  PRETTIER_PACKAGE_PATTERNS,
+  PRETTIER_PACKAGES,
 } from './dprint.constants';
 import { ensureDprintConfig } from './dprint.template';
+
+/**
+ * Convert a glob pattern (e.g., "*prettier-plugin-*") to a regex for matching package names.
+ * Supports * as wildcard. For scoped packages, matches against the full name.
+ */
+function patternToRegex(pattern: string): RegExp {
+  // Escape special regex chars except *
+  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+  // Replace * with .* for regex
+  const regexStr = `^${escaped.replace(/\*/g, '.*')}$`;
+  return new RegExp(regexStr);
+}
+
+/**
+ * Check if a package name matches any of the Prettier patterns.
+ */
+function matchesPrettierPattern(packageName: string): boolean {
+  return PRETTIER_PACKAGE_PATTERNS.some((pattern) => {
+    const regex = patternToRegex(pattern);
+    return regex.test(packageName);
+  });
+}
+
+/**
+ * Find all Prettier-related packages in package.json (exact matches + pattern matches).
+ */
+async function findPrettierPackages(targetDir: string): Promise<string[]> {
+  const packageJsonPath = resolve(targetDir, 'package.json');
+  const raw = await readFile(packageJsonPath, 'utf8');
+  const packageJson = JSON.parse(raw) as PackageJson;
+
+  const allDeps = new Set<string>();
+
+  // Collect from dependencies
+  if (packageJson.dependencies && typeof packageJson.dependencies === 'object') {
+    for (const name of Object.keys(packageJson.dependencies)) {
+      allDeps.add(name);
+    }
+  }
+
+  // Collect from devDependencies
+  if (packageJson.devDependencies && typeof packageJson.devDependencies === 'object') {
+    for (const name of Object.keys(packageJson.devDependencies)) {
+      allDeps.add(name);
+    }
+  }
+
+  // Find matches
+  const matches: string[] = [];
+
+  for (const dep of allDeps) {
+    // Exact match
+    if (PRETTIER_PACKAGES.includes(dep as (typeof PRETTIER_PACKAGES)[number])) {
+      matches.push(dep);
+      continue;
+    }
+
+    // Pattern match
+    if (matchesPrettierPattern(dep)) {
+      matches.push(dep);
+    }
+  }
+
+  return matches;
+}
+
+/**
+ * If Prettier is present, uninstall it and backup Prettier config files so dprint
+ * can take over. Returns what was done so applyDprint can report it.
+ */
+async function replacePrettierIfPresent(
+  targetDir: string,
+): Promise<{ removedPackages: string[]; backedUp: string[] }> {
+  const backedUp: string[] = [];
+  const removedPackages: string[] = [];
+
+  // 1. Find and uninstall all Prettier-related packages
+  const prettierPackages = await findPrettierPackages(targetDir);
+  for (const pkg of prettierPackages) {
+    const result = await removeDependency(targetDir, pkg);
+    if (result.removed) {
+      removedPackages.push(pkg);
+    }
+  }
+
+  // 2. Backup each Prettier config file that exists
+  for (const file of PRETTIER_CONFIG_FILES) {
+    const filePath = resolve(targetDir, file);
+    if (fileExists(filePath)) {
+      const ext = extname(file);
+      const base = basename(file, ext || undefined);
+      const backupName = base + '--backup' + (ext || '');
+      const backupPath = resolve(targetDir, backupName);
+      await rename(filePath, backupPath);
+      backedUp.push(file);
+    }
+  }
+
+  return { removedPackages, backedUp };
+}
 
 /**
  * Check if formatting scripts section already exists in package.json.
@@ -131,10 +236,22 @@ async function addFormattingScripts(
 
 /**
  * Apply dprint feature to an existing package.
- * Installs @finografic/dprint-config, creates dprint.jsonc, and adds formatting scripts.
+ * Replaces Prettier if present (uninstall + backup configs), then installs
+ * @finografic/dprint-config, creates dprint.jsonc, and adds formatting scripts.
  */
 export async function applyDprint(context: FeatureContext): Promise<FeatureApplyResult> {
   const applied: string[] = [];
+
+  // 0. Replace Prettier if present (uninstall, backup config files)
+  const replaceResult = await replacePrettierIfPresent(context.targetDir);
+  if (replaceResult.removedPackages.length > 0) {
+    applied.push('removed Prettier packages');
+    successMessage(`Uninstalled: ${replaceResult.removedPackages.join(', ')}`);
+  }
+  if (replaceResult.backedUp.length > 0) {
+    applied.push('backed up Prettier config(s)');
+    successMessage(`Backed up Prettier config: ${replaceResult.backedUp.join(', ')}`);
+  }
 
   // 1. Install @finografic/dprint-config
   try {

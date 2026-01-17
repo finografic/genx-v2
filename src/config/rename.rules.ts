@@ -20,17 +20,6 @@ export const renameRules: RenameRule[] = [
     ],
   },
   {
-    canonical: 'prettier.config.mjs',
-    alternatives: [
-      '.prettierrc',
-      '.prettierrc.js',
-      '.prettierrc.json',
-      'prettier.config.js',
-      'prettier.config.cjs',
-      'prettier.config.ts',
-    ],
-  },
-  {
     canonical: 'commitlint.config.mjs',
     alternatives: [
       '.commitlintrc',

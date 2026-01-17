@@ -3,7 +3,7 @@ import type { DependencyRule } from 'types/dependencies.types';
 export const dependencyRules: DependencyRule[] = [
   // core tooling
   { name: 'typescript', version: '^5.9.2', section: 'devDependencies' },
-  { name: 'tsdown', version: '^0.18.3', section: 'devDependencies' },
+  { name: 'tsdown', version: '^0.19.0', section: 'devDependencies' },
   { name: 'vitest', version: '^4.0.16', section: 'devDependencies' },
   { name: 'simple-git-hooks', version: '^2.13.1', section: 'devDependencies' },
   { name: 'lint-staged', version: '^16.2.7', section: 'devDependencies' },

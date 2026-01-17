@@ -130,7 +130,7 @@ Every generated package includes:
 ### Development Tools
 
 - **ESLint** - Modern flat config (v9)
-- **Prettier** - Code formatting
+- **dprint** - Code formatting
 - **Commitlint** - Conventional commits
 - **simple-git-hooks** - Pre-commit hooks
 - **lint-staged** - Run linters on staged files
@@ -157,7 +157,7 @@ my-package/
 ├── package.json
 ├── tsconfig.json
 ├── eslint.config.ts
-├── prettier.config.mjs
+├── dprint.jsonc
 ├── commitlint.config.mjs
 ├── .simple-git-hooks.mjs
 ├── .gitignore
