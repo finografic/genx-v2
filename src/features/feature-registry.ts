@@ -1,7 +1,7 @@
-import { aiRulesFeature } from './ai-rules';
-import { dprintFeature } from './dprint';
+import { aiRulesFeature } from './ai-rules/ai-rules.feature';
+import { dprintFeature } from './dprint/dprint.feature';
+import { vitestFeature } from './vitest/vitest.feature';
 import type { Feature, FeatureId } from './feature.types';
-import { vitestFeature } from './vitest';
 
 /**
  * Registry of all available features.

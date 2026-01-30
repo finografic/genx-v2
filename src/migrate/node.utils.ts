@@ -18,7 +18,7 @@ export interface CurrentNodeState {
 
 /**
  * Detect the major version from a Node version string.
- * Handles formats like "24.12.0", "v24.12.0", "24", etc.
+ * Handles formats like "24.3.0", "v24.3.0", "24", etc.
  */
 export function detectNodeMajor(version: string): number | null {
   const match = version.match(/^v?(\d+)/);

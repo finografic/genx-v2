@@ -2,7 +2,7 @@ export type NodeMajor = 20 | 22 | 24;
 
 export interface NodePolicy {
   major: NodeMajor;
-  /** Exact Node version pinned for local development. Written to .nvmrc. Format: "MAJOR.MINOR.PATCH" (e.g., "24.12.0") */
+  /** Exact Node version pinned for local development. Written to .nvmrc. Format: "MAJOR.MINOR.PATCH" (e.g., "24.3.0") */
   local: {
     nvmrc: string;
   };
@@ -19,7 +19,7 @@ export interface NodePolicy {
 export const nodePolicy: NodePolicy = {
   major: 24,
   local: {
-    nvmrc: '24.12.0',
+    nvmrc: '24.3.0',
   },
   ci: {
     githubActions: '24.x',
