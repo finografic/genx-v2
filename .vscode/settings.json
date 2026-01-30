@@ -3,7 +3,6 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "dprint.dprint",
   "eslint.enable": true,
   "npm.packageManager": "pnpm",
   "eslint.useFlatConfig": true,
@@ -42,10 +41,10 @@
       "source.fixAll.eslint": "explicit"
     }
   },
-  "[toml]": {
+  "[yaml]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
-  "[yaml]": {
+  "[toml]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
   "[css]": {
@@ -54,13 +53,7 @@
   "[scss]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
-  "[sass]": {
-    "editor.defaultFormatter": "dprint.dprint"
-  },
   "[html]": {
-    "editor.defaultFormatter": "dprint.dprint"
-  },
-  "[astro]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
   "markdownlint.config": {
