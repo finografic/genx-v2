@@ -1,5 +1,14 @@
 import type { DependencyRule } from 'types/dependencies.types';
 
+/**
+ * TODO: these version will get stale, and maintenance should be avoided..
+ * The latest dependency versions should be installed, by either:
+ *
+ * - fetching the latest version from the dependency's npm registry
+ * - running pnpm update --latest to update the dependency to the latest version
+ * - make version optional, therore fixed-version are possible also
+ */
+
 export const dependencyRules: DependencyRule[] = [
   // core tooling
   { name: 'typescript', version: '^5.9.2', section: 'devDependencies' },

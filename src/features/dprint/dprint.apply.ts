@@ -13,6 +13,7 @@ import {
   successMessage,
 } from 'utils';
 import {
+  PACKAGE_JSON,
   PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER,
   PACKAGE_JSON_SCRIPTS_SECTION_PREFIX,
 } from 'config/constants.config';
@@ -57,7 +58,7 @@ function matchesPrettierPattern(packageName: string): boolean {
  * Find all Prettier-related packages in package.json (exact matches + pattern matches).
  */
 async function findPrettierPackages(targetDir: string): Promise<string[]> {
-  const packageJsonPath = resolve(targetDir, 'package.json');
+  const packageJsonPath = resolve(targetDir, PACKAGE_JSON);
   const raw = await readFile(packageJsonPath, 'utf8');
   const packageJson = JSON.parse(raw) as PackageJson;
 
@@ -292,7 +293,7 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   }
 
   // 3. Add formatting scripts to package.json
-  const packageJsonPath = resolve(context.targetDir, 'package.json');
+  const packageJsonPath = resolve(context.targetDir, PACKAGE_JSON);
   const scriptsResult = await addFormattingScripts(packageJsonPath);
   if (scriptsResult.added) {
     applied.push('formatting scripts');

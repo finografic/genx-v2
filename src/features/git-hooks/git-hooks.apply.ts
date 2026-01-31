@@ -9,6 +9,7 @@ import {
   successMessage,
   warnMessage,
 } from 'utils';
+import { PACKAGE_JSON } from 'config/constants.config';
 import type { PackageJson } from 'types/package-json.types';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
@@ -26,7 +27,7 @@ import {
 async function addPackageJsonConfigs(
   targetDir: string,
 ): Promise<{ addedLintStaged: boolean; addedSimpleGitHooks: boolean }> {
-  const packageJsonPath = resolve(targetDir, 'package.json');
+  const packageJsonPath = resolve(targetDir, PACKAGE_JSON);
   const raw = await readFile(packageJsonPath, 'utf8');
   const packageJson = JSON.parse(raw) as PackageJson;
 
@@ -80,7 +81,7 @@ async function createCommitlintConfig(targetDir: string): Promise<boolean> {
  * Check if prepare script includes simple-git-hooks.
  */
 async function ensurePrepareScript(targetDir: string): Promise<boolean> {
-  const packageJsonPath = resolve(targetDir, 'package.json');
+  const packageJsonPath = resolve(targetDir, PACKAGE_JSON);
   const raw = await readFile(packageJsonPath, 'utf8');
   const packageJson = JSON.parse(raw) as PackageJson;
 

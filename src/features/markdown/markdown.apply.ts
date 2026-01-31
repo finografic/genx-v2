@@ -12,6 +12,7 @@ import {
   successMessage,
   writeSettingsJson,
 } from 'utils';
+import { ESLINT_CONFIG_FILES } from 'config/constants.config';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
   ESLINT_MARKDOWN_CONFIG_BLOCK,
@@ -28,14 +29,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * Find the eslint config file in the target directory.
  */
 function findEslintConfig(targetDir: string): string | null {
-  const candidates = [
-    'eslint.config.ts',
-    'eslint.config.mjs',
-    'eslint.config.cjs',
-    'eslint.config.js',
-  ];
-
-  for (const candidate of candidates) {
+  for (const candidate of ESLINT_CONFIG_FILES) {
     const filePath = resolve(targetDir, candidate);
     if (fileExists(filePath)) {
       return filePath;
