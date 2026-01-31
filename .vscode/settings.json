@@ -33,14 +33,6 @@
   "[jsonc]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
-  "[markdown]": {
-    "editor.defaultFormatter": "dprint.dprint",
-    "files.trimTrailingWhitespace": false,
-    "files.insertFinalNewline": true,
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
-    }
-  },
   "[yaml]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
@@ -55,6 +47,14 @@
   },
   "[html]": {
     "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "dprint.dprint",
+    "files.trimTrailingWhitespace": false,
+    "files.insertFinalNewline": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
   },
   "markdownlint.config": {
     "default": true,
