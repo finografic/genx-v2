@@ -49,7 +49,7 @@
     "editor.defaultFormatter": "dprint.dprint"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "dprint.dprint",
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "files.trimTrailingWhitespace": false,
     "files.insertFinalNewline": true,
     "editor.codeActionsOnSave": {

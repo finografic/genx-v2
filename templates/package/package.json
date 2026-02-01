@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
-    "@finografic/dprint-config": "^0.8.0",
+    "@finografic/dprint-config": "^0.12.1",
     "@commitlint/config-conventional": "^20.2.0",
     "@eslint/js": "^9.39.2",
     "@stylistic/eslint-plugin": "^5.6.1",
@@ -92,9 +92,12 @@
     "vitest": "^4.0.16"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,mjs,cjs,json,jsonc,md,yml,yaml}": [
-      "dprint fmt  --allow-no-files",
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "dprint fmt",
       "eslint --fix"
+    ],
+    "*.{json,jsonc,md,yml,yaml,toml}": [
+      "dprint fmt"
     ]
   },
   "simple-git-hooks": {
