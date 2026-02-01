@@ -6,31 +6,31 @@ import type { FeatureId } from 'features/feature.types';
 import { getFeature } from 'features/feature-registry';
 import { migrateHelp } from 'help/migrate.help';
 import * as pc from 'picocolors';
-import { applyDependencyChanges, planDependencyChanges } from 'src/lib/migrate/dependencies.utils';
-import { restructureDocs } from 'src/lib/migrate/docs-restructure.utils';
-import { applyMerges } from 'src/lib/migrate/merge.utils';
-import { parseMigrateArgs } from 'src/lib/migrate/migrate-metadata.utils';
-import { getScopeAndName, shouldRunSection } from 'src/lib/migrate/migrate-metadata.utils';
+
+import { applyDependencyChanges, planDependencyChanges } from 'lib/migrate/dependencies.utils';
+import { restructureDocs } from 'lib/migrate/docs-restructure.utils';
+import { applyMerges } from 'lib/migrate/merge.utils';
+import { parseMigrateArgs } from 'lib/migrate/migrate-metadata.utils';
+import { getScopeAndName, shouldRunSection } from 'lib/migrate/migrate-metadata.utils';
 import {
   applyNodeRuntimeChanges,
   applyNodeTypesChange,
   detectNodeMajor,
-} from 'src/lib/migrate/node.utils';
+} from 'lib/migrate/node.utils';
 import {
   patchPackageJson,
   readPackageJson,
   writePackageJson,
-} from 'src/lib/migrate/package-json.utils';
-import { planMigration } from 'src/lib/migrate/plan.utils';
-import { applyRenames } from 'src/lib/migrate/rename.utils';
-import { copyLicenseIfMissing, syncFromTemplate } from 'src/lib/migrate/template-sync.utils';
-import { promptFeatures } from 'src/lib/prompts/features.prompt';
+} from 'lib/migrate/package-json.utils';
+import { planMigration } from 'lib/migrate/plan.utils';
+import { applyRenames } from 'lib/migrate/rename.utils';
+import { copyLicenseIfMissing, syncFromTemplate } from 'lib/migrate/template-sync.utils';
+import { promptFeatures } from 'lib/prompts/features.prompt';
 import {
   confirmMerges,
   confirmMigrateTarget,
   confirmNodeVersionUpgrade,
-} from 'src/lib/prompts/migrate.prompt';
-
+} from 'lib/prompts/migrate.prompt';
 import { errorMessage, infoMessage, intro, renderHelp, spinner, successMessage } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
 import { validateExistingPackage } from 'utils/validation.utils';

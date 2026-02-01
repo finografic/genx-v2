@@ -5,17 +5,17 @@ import { fileURLToPath } from 'node:url';
 import type { FeatureId } from 'features/feature.types';
 import { getFeature } from 'features/feature-registry';
 import * as pc from 'picocolors';
-import { planDependencyChanges } from 'src/lib/migrate/dependencies.utils';
-import { planMerges } from 'src/lib/migrate/merge.utils';
-import { shouldRunSection } from 'src/lib/migrate/migrate-metadata.utils';
+
+import { planDependencyChanges } from 'lib/migrate/dependencies.utils';
+import { planMerges } from 'lib/migrate/merge.utils';
+import { shouldRunSection } from 'lib/migrate/migrate-metadata.utils';
 import {
   detectCurrentNodeState,
   planNodeRuntimeChanges,
   planNodeTypesChange,
-} from 'src/lib/migrate/node.utils';
-import { patchPackageJson } from 'src/lib/migrate/package-json.utils';
-import { getExistingFiles, planRenames } from 'src/lib/migrate/rename.utils';
-
+} from 'lib/migrate/node.utils';
+import { patchPackageJson } from 'lib/migrate/package-json.utils';
+import { getExistingFiles, planRenames } from 'lib/migrate/rename.utils';
 import {
   errorMessage,
   fileExists,
