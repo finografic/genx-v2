@@ -1,5 +1,4 @@
-import * as pc from 'picocolors';
-
+import { pc } from 'utils/picocolors';
 import { defaultHelpOptions } from 'config/help.config';
 import type { HelpConfig, HelpNote, HelpNoteOptions, HelpNoteReturn } from 'types/help.types';
 import { padLines, padValue } from './padding.utils';

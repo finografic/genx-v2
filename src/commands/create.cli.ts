@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { execa } from 'execa';
 import { ensureDprintConfig } from 'features/dprint/dprint.template';
 import { createHelp } from 'help/create.help';
-import * as pc from 'picocolors';
 
 import {
   buildTemplateVars,
@@ -21,6 +20,7 @@ import {
   validateTargetDir,
 } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
+import { pc } from 'utils/picocolors';
 import { promptCreatePackage } from 'utils/prompts';
 import { renderHelp } from 'utils/render-help/render-help.utils';
 import { createConfig } from 'config/create.config';

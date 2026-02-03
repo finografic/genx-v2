@@ -5,7 +5,6 @@ import { execa } from 'execa';
 import type { FeatureId } from 'features/feature.types';
 import { getFeature } from 'features/feature-registry';
 import { migrateHelp } from 'help/migrate.help';
-import * as pc from 'picocolors';
 
 import { applyDependencyChanges, planDependencyChanges } from 'lib/migrate/dependencies.utils';
 import { restructureDocs } from 'lib/migrate/docs-restructure.utils';
@@ -33,6 +32,7 @@ import {
 } from 'lib/prompts/migrate.prompt';
 import { errorMessage, infoMessage, intro, renderHelp, spinner, successMessage } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
+import { pc } from 'utils/picocolors';
 import { validateExistingPackage } from 'utils/validation.utils';
 import { dependencyRules } from 'config/dependencies.rules';
 import { migrateConfig } from 'config/migrate.config';

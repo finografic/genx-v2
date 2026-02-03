@@ -1,11 +1,11 @@
 import type { FeatureId } from 'features/feature.types';
 import { getFeature } from 'features/feature-registry';
 import { featuresHelp } from 'help/features.help';
-import * as pc from 'picocolors';
 
 import { promptFeatures } from 'lib/prompts/features.prompt';
 import { errorMessage, infoMessage, intro, outro, outroDim } from 'utils';
 import { isDevelopment, safeExit } from 'utils/env.utils';
+import { pc } from 'utils/picocolors';
 import { renderHelp } from 'utils/render-help/render-help.utils';
 import { validateExistingPackage } from 'utils/validation.utils';
 

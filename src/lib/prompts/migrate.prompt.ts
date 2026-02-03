@@ -1,6 +1,6 @@
 import * as clack from '@clack/prompts';
-import * as pc from 'picocolors';
 
+import { pc } from 'utils/picocolors';
 import { cancel } from 'utils/prompts.utils';
 
 export async function confirmMigrateTarget(pkg: {

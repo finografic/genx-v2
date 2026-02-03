@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 
 import type { FeatureId } from 'features/feature.types';
 import { getFeature } from 'features/feature-registry';
-import * as pc from 'picocolors';
 
 import { planDependencyChanges } from 'lib/migrate/dependencies.utils';
 import { planMerges } from 'lib/migrate/merge.utils';
@@ -24,6 +23,7 @@ import {
   infoMessage,
 } from 'utils';
 import { safeExit } from 'utils/env.utils';
+import { pc } from 'utils/picocolors';
 import { dependencyRules } from 'config/dependencies.rules';
 import { mergeConfig } from 'config/merge.rules';
 import { migrateConfig } from 'config/migrate.config';
