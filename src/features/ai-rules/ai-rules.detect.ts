@@ -7,9 +7,14 @@ import { AI_RULES_FILES } from './ai-rules.constants';
 
 /**
  * Detect if AI Rules feature is already present in the target directory.
+ * Checks for copilot-instructions.md, instructions dir, CLAUDE.md, and .cursor/rules.
  */
 export async function detectAiRules(context: FeatureContext): Promise<boolean> {
-  const copilotInstructionsPath = resolve(context.targetDir, AI_RULES_FILES[0]);
-  const instructionsDirPath = resolve(context.targetDir, AI_RULES_FILES[1]);
-  return fileExists(copilotInstructionsPath) && existsSync(instructionsDirPath);
+  const [copilotFile, instructionsDir, claudeFile, cursorDir] = AI_RULES_FILES;
+  return (
+    fileExists(resolve(context.targetDir, copilotFile))
+    && existsSync(resolve(context.targetDir, instructionsDir))
+    && fileExists(resolve(context.targetDir, claudeFile))
+    && existsSync(resolve(context.targetDir, cursorDir))
+  );
 }

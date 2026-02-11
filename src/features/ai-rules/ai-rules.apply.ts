@@ -9,18 +9,24 @@ import { AI_RULES_FILES } from './ai-rules.constants';
 
 /**
  * Apply AI Rules feature to an existing package.
- * Copies .github/copilot-instructions.md and .github/instructions/ from template.
+ * Copies Copilot instructions, GitHub instructions, CLAUDE.md, and Cursor rules from template.
  */
 export async function applyAiRules(context: FeatureContext): Promise<FeatureApplyResult> {
   const applied: string[] = [];
 
-  const copilotDest = resolve(context.targetDir, AI_RULES_FILES[0]);
-  const instructionsDest = resolve(context.targetDir, AI_RULES_FILES[1]);
+  const [copilotFile, instructionsDir, claudeFile, cursorDir] = AI_RULES_FILES;
+
+  const copilotDest = resolve(context.targetDir, copilotFile);
+  const instructionsDest = resolve(context.targetDir, instructionsDir);
+  const claudeDest = resolve(context.targetDir, claudeFile);
+  const cursorDest = resolve(context.targetDir, cursorDir);
 
   const copilotExists = fileExists(copilotDest);
   const instructionsExist = existsSync(instructionsDest);
+  const claudeExists = fileExists(claudeDest);
+  const cursorExists = existsSync(cursorDest);
 
-  if (copilotExists && instructionsExist) {
+  if (copilotExists && instructionsExist && claudeExists && cursorExists) {
     return { applied, noopMessage: 'AI rules already installed. No changes made.' };
   }
 
@@ -28,40 +34,42 @@ export async function applyAiRules(context: FeatureContext): Promise<FeatureAppl
   const fromDir = fileURLToPath(new URL('.', import.meta.url));
   const templateDir = getTemplatesDir(fromDir);
 
+  const templateVars = {
+    SCOPE: '',
+    NAME: '',
+    PACKAGE_NAME: '',
+    YEAR: new Date().getFullYear().toString(),
+    DESCRIPTION: '',
+    AUTHOR_NAME: '',
+    AUTHOR_EMAIL: '',
+  };
+
   const copySpin = spinner();
   copySpin.start('Copying AI rules...');
 
   try {
     // Copy copilot-instructions.md
-    const copilotSource = resolve(templateDir, AI_RULES_FILES[0]);
-
     if (!copilotExists) {
-      await copyTemplate(copilotSource, copilotDest, {
-        SCOPE: '',
-        NAME: '',
-        PACKAGE_NAME: '',
-        YEAR: new Date().getFullYear().toString(),
-        DESCRIPTION: '',
-        AUTHOR_NAME: '',
-        AUTHOR_EMAIL: '',
-      });
-      applied.push(AI_RULES_FILES[0]);
+      await copyTemplate(resolve(templateDir, copilotFile), copilotDest, templateVars);
+      applied.push(copilotFile);
     }
 
     // Copy instructions directory
-    const instructionsSource = resolve(templateDir, AI_RULES_FILES[1]);
-
     if (!instructionsExist) {
-      await copyDir(instructionsSource, instructionsDest, {
-        SCOPE: '',
-        NAME: '',
-        PACKAGE_NAME: '',
-        YEAR: new Date().getFullYear().toString(),
-        DESCRIPTION: '',
-        AUTHOR_NAME: '',
-        AUTHOR_EMAIL: '',
-      });
-      applied.push(AI_RULES_FILES[1]);
+      await copyDir(resolve(templateDir, instructionsDir), instructionsDest, templateVars);
+      applied.push(instructionsDir);
+    }
+
+    // Copy CLAUDE.md
+    if (!claudeExists) {
+      await copyTemplate(resolve(templateDir, claudeFile), claudeDest, templateVars);
+      applied.push(claudeFile);
+    }
+
+    // Copy .cursor/rules directory
+    if (!cursorExists) {
+      await copyDir(resolve(templateDir, cursorDir), cursorDest, templateVars);
+      applied.push(cursorDir);
     }
 
     copySpin.stop('AI rules copied');

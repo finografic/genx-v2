@@ -32,6 +32,6 @@ export const createConfig: CreateConfig = {
    */
   ignorePatterns: {
     /** Ignore AI rules if not selected */
-    aiRules: ['.github/copilot-instructions.md', '.github/instructions'],
+    aiRules: ['.github/copilot-instructions.md', '.github/instructions', 'CLAUDE.md', '.cursor'],
   },
 };

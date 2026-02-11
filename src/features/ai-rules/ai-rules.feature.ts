@@ -7,7 +7,7 @@ import { detectAiRules } from './ai-rules.detect';
  */
 export const aiRulesFeature: Feature = {
   id: 'aiRules',
-  label: 'AI Rules (.github/copilot-instructions.md)',
+  label: 'AI Rules (Copilot, Claude Code, Cursor)',
   hint: 'recommended',
   detect: detectAiRules,
   apply: applyAiRules,

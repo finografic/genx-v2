@@ -16,7 +16,6 @@ Rules are canonical in `.github/instructions/` and shared across Claude Code, Cu
 
 ## Project-Specific
 
-- Do not include `Co-Authored-By` lines in commit messages.
 - Generated README sections are managed by `pnpm docs.usage` — never edit content between `<!-- GENERATED:*:START/END -->` markers by hand.
 
 ## Session Memory
