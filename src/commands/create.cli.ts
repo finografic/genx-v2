@@ -13,7 +13,7 @@ import {
   ensureDir,
   errorMessage,
   findPackageRoot,
-  getTemplatesPackageDir,
+  getTemplatesDir,
   infoMessage,
   intro,
   outro,
@@ -77,7 +77,7 @@ export async function createPackage(argv: string[], context: { cwd: string }): P
     // Resolve templates from package root
     const fromDir = fileURLToPath(new URL('.', import.meta.url));
     const packageRoot = findPackageRoot(fromDir);
-    const templateDir = getTemplatesPackageDir(fromDir);
+    const templateDir = getTemplatesDir(fromDir);
 
     if (debug) {
       infoMessage(`importMetaDir: ${fromDir}`);

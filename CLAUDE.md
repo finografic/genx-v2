@@ -18,3 +18,17 @@ Rules are canonical in `.github/instructions/` and shared across Claude Code, Cu
 
 - Do not include `Co-Authored-By` lines in commit messages.
 - Generated README sections are managed by `pnpm docs.usage` — never edit content between `<!-- GENERATED:*:START/END -->` markers by hand.
+
+## Session Memory
+
+Claude Code maintains a lightweight session log at `.claude/memory.md` (gitignored).
+
+**On session start:** Read `.claude/memory.md` if it exists. Use it to understand recent context.
+
+**On session end (or after significant work):** Append a brief entry to `.claude/memory.md` with:
+
+- Date
+- One-line summary of what was done
+- Any important decisions or context for next session
+
+Keep only the **last 2 sessions** in the file (delete older entries when appending). Each entry should be 2-4 lines max — this is a breadcrumb trail, not a journal.

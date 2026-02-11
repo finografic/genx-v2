@@ -36,8 +36,8 @@
   "include": [
     "src/**/*",
     "eslint.config.ts",
-    "_templates/package/eslint.config.ts",
-    "_templates/package/src/declarations.d.ts"
+    "_templates/eslint.config.ts",
+    "_templates/src/declarations.d.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

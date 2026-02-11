@@ -3,7 +3,7 @@ import { sharedConfig } from './shared.config';
 /**
  * Configuration for the create command.
  *
- * Note: create copies the entire _templates/package/ directory,
+ * Note: create copies the entire _templates/ directory,
  * so most config is in shared.config.ts (scripts, lint-staged, keywords).
  *
  * This file exists for create-specific settings (e.g., feature flags, ignore patterns).

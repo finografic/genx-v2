@@ -15,13 +15,7 @@ import {
 } from 'lib/migrate/node.utils';
 import { patchPackageJson } from 'lib/migrate/package-json.utils';
 import { getExistingFiles, planRenames } from 'lib/migrate/rename.utils';
-import {
-  errorMessage,
-  fileExists,
-  findPackageRoot,
-  getTemplatesPackageDir,
-  infoMessage,
-} from 'utils';
+import { errorMessage, fileExists, findPackageRoot, getTemplatesDir, infoMessage } from 'utils';
 import { safeExit } from 'utils/env.utils';
 import { pc } from 'utils/picocolors';
 import { dependencyRules } from 'config/dependencies.rules';
@@ -74,7 +68,7 @@ export async function planMigration(
   // Get template directory early (needed for merge planning)
   const fromDir = fileURLToPath(new URL('.', import.meta.url));
   const packageRoot = findPackageRoot(fromDir);
-  const templateDir = getTemplatesPackageDir(fromDir);
+  const templateDir = getTemplatesDir(fromDir);
 
   // Dependencies planning
   if (shouldRunSection(only, 'dependencies')) {

@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { copyDir, copyTemplate, errorMessage, fileExists, spinner, successMessage } from 'utils';
-import { getTemplatesPackageDir } from 'utils/package-root.utils';
+import { getTemplatesDir } from 'utils/package-root.utils';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import { AI_RULES_FILES } from './ai-rules.constants';
 
@@ -26,7 +26,7 @@ export async function applyAiRules(context: FeatureContext): Promise<FeatureAppl
 
   // Get template directory
   const fromDir = fileURLToPath(new URL('.', import.meta.url));
-  const templateDir = getTemplatesPackageDir(fromDir);
+  const templateDir = getTemplatesDir(fromDir);
 
   const copySpin = spinner();
   copySpin.start('Copying AI rules...');
