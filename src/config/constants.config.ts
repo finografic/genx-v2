@@ -16,7 +16,7 @@ export const ESLINT_CONFIG_FILES = [
 export const VSCODE_DIR = '.vscode';
 export const VSCODE_SETTINGS_JSON = 'settings.json';
 export const VSCODE_EXTENSIONS_JSON = 'extensions.json';
-export const VSCODE_MARKDOWN_CSS = 'markdown-custom.css';
+export const VSCODE_MARKDOWN_CSS = 'markdown-custom-dark.css';
 
 export const COMMITLINT_CONFIG = 'commitlint.config.mjs';
 

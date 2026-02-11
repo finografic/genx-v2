@@ -129,7 +129,7 @@ async function addMarkdownVSCodeSettings(targetDir: string): Promise<boolean> {
 }
 
 /** CSS files to copy from _templates/package/.vscode to target .vscode */
-const MARKDOWN_CSS_FILES = ['markdown-custom.css', 'markdown-github-light.css'] as const;
+const MARKDOWN_CSS_FILES = ['markdown-custom-dark.css', 'markdown-github-light.css'] as const;
 
 /**
  * Copy one CSS file from _templates/package/.vscode to target .vscode folder.
@@ -161,7 +161,7 @@ async function copyMarkdownCssFile(
 }
 
 /**
- * Copy markdown CSS files (markdown-custom.css, markdown-github-light.css) to target .vscode folder.
+ * Copy markdown CSS files (markdown-custom-dark.css, markdown-github-light.css) to target .vscode folder.
  */
 async function copyMarkdownCss(targetDir: string): Promise<boolean> {
   let anyCopied = false;
@@ -227,7 +227,7 @@ export async function applyMarkdown(context: FeatureContext): Promise<FeatureApp
   // 5. Copy markdown CSS files from _templates/package/.vscode
   const cssCopied = await copyMarkdownCss(context.targetDir);
   if (cssCopied) {
-    applied.push('.vscode/markdown-custom.css, markdown-github-light.css');
+    applied.push('.vscode/markdown-custom-dark.css, markdown-github-light.css');
     successMessage('Copied markdown CSS files to .vscode');
   }
 

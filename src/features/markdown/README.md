@@ -9,7 +9,7 @@ Markdown linting via `eslint-plugin-markdownlint`.
 - Adds `[markdown]` settings to `.vscode/settings.json`
 - Adds `markdownlint.config` to `.vscode/settings.json`
 - Adds VSCode extension recommendation
-- Copies `markdown-custom.css` for preview styling
+- Copies `markdown-custom-dark.css` for preview styling
 
 ## Files
 
