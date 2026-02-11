@@ -12,61 +12,6 @@ It is designed to be **run**, not installed.
 
 ---
 
-## ✨ Features
-
-<!-- GENERATED:FEATURES:START -->
-
-### dprint
-
-Code formatting via `@finografic/dprint-config`.
-
-- Installs `@finografic/dprint-config`
-- Creates `dprint.jsonc`
-- Adds `format` / `format.check` scripts
-- Replaces Prettier if present (uninstall + backup configs)
-- Adds VSCode extension recommendation
-- Configures language formatters in `.vscode/settings.json`
-
-### vitest
-
-Testing via Vitest.
-
-- Installs `vitest`
-- Adds `test` / `test.run` / `test.coverage` scripts
-
-### ai-rules
-
-AI coding assistant rules (GitHub Copilot instructions).
-
-- Copies `.github/copilot-instructions.md`
-- Copies `.github/instructions/` folder
-
-### markdown
-
-Markdown linting via `eslint-plugin-markdownlint`.
-
-- Installs `eslint-plugin-markdownlint`
-- Adds markdown block to `eslint.config.ts`
-- Adds `[markdown]` settings to `.vscode/settings.json`
-- Adds `markdownlint.config` to `.vscode/settings.json`
-- Adds VSCode extension recommendation
-- Copies `markdown-custom.css` for preview styling
-
-### git-hooks
-
-Pre-commit linting + conventional commits.
-
-- Installs `lint-staged`, `simple-git-hooks`
-- Installs `@commitlint/cli`, `@commitlint/config-conventional`
-- Adds `lint-staged` config to package.json
-- Adds `simple-git-hooks` config to package.json
-- Creates `commitlint.config.mjs`
-- Ensures `prepare` script runs `simple-git-hooks`
-
-<!-- GENERATED:FEATURES:END -->
-
----
-
 ## 🚀 Usage
 
 <!-- GENERATED:USAGE:START -->
@@ -142,32 +87,78 @@ genx features
 
 ---
 
+## ✨ Features
+
+<!-- GENERATED:FEATURES:START -->
+
+### dprint
+
+Code formatting via `@finografic/dprint-config`.
+
+- Installs `@finografic/dprint-config`
+- Creates `dprint.jsonc`
+- Adds `format` / `format.check` scripts
+- Replaces Prettier if present (uninstall + backup configs)
+- Adds VSCode extension recommendation
+- Configures language formatters in `.vscode/settings.json`
+
+### vitest
+
+Testing via Vitest.
+
+- Installs `vitest`
+- Adds `test` / `test.run` / `test.coverage` scripts
+
+### ai-rules
+
+AI coding assistant rules (GitHub Copilot instructions).
+
+- Copies `.github/copilot-instructions.md`
+- Copies `.github/instructions/` folder
+
+### markdown
+
+Markdown linting via `eslint-plugin-markdownlint`.
+
+- Installs `eslint-plugin-markdownlint`
+- Adds markdown block to `eslint.config.ts`
+- Adds `[markdown]` settings to `.vscode/settings.json`
+- Adds `markdownlint.config` to `.vscode/settings.json`
+- Adds VSCode extension recommendation
+- Copies `markdown-custom.css` for preview styling
+
+### git-hooks
+
+Pre-commit linting + conventional commits.
+
+- Installs `lint-staged`, `simple-git-hooks`
+- Installs `@commitlint/cli`, `@commitlint/config-conventional`
+- Adds `lint-staged` config to package.json
+- Adds `simple-git-hooks` config to package.json
+- Creates `commitlint.config.mjs`
+- Ensures `prepare` script runs `simple-git-hooks`
+
+<!-- GENERATED:FEATURES:END -->
+
+---
+
 ## 📦 What's Included
 
-Every generated package includes:
+Every scaffolded package includes:
 
-### Core Files
+- `package.json` — configured with scope, name, and package type
+- `tsconfig.json` — strict TypeScript config
+- `tsdown.config.ts` — modern bundler setup
+- `eslint.config.ts` — ESLint v9 flat config
+- `.gitignore`, `LICENSE`, `README.md`
 
-- `package.json` - Configured with your scope and name
-- `tsconfig.json` - Strict TypeScript config
-- `tsdown.config.ts` - Modern bundler setup
-- `.gitignore` - Sensible defaults
-- `LICENSE` - MIT license
-- `README.md` - Basic documentation template
+Optional features (selected during `create` or added via `features`):
 
-### Development Tools
-
-- **ESLint** - Modern flat config (v9)
-- **dprint** - Code formatting
-- **Commitlint** - Conventional commits
-- **simple-git-hooks** - Pre-commit hooks
-- **lint-staged** - Run linters on staged files
-
-### Optional Features
-
-- **Vitest** - Fast unit testing (recommended)
-- **GitHub Workflow** - Automated releases
-- **AI Rules** - Copilot instructions and guidelines
+- **dprint** — code formatting
+- **vitest** — unit testing
+- **git-hooks** — pre-commit linting + conventional commits
+- **ai-rules** — GitHub Copilot instructions
+- **markdown** — markdown linting via ESLint
 
 ---
 
@@ -175,121 +166,72 @@ Every generated package includes:
 
 ```
 my-package/
-├── .github/
-│   ├── workflows/
-│   │   └── release.yml
-│   ├── copilot-instructions.md  (optional)
-│   └── instructions/            (optional)
 ├── src/
-│   └── index.ts
+│   ├── index.ts
+│   └── cli.ts              (cli type only)
 ├── package.json
 ├── tsconfig.json
+├── tsdown.config.ts
 ├── eslint.config.ts
-├── dprint.jsonc
-├── commitlint.config.mjs
-├── .simple-git-hooks.mjs
 ├── .gitignore
 ├── LICENSE
-└── README.md
+├── README.md
+├── dprint.jsonc             (optional)
+├── commitlint.config.mjs   (optional)
+└── .github/                 (optional)
+    ├── copilot-instructions.md
+    └── instructions/
 ```
 
 ---
 
 ## 📋 Commands Reference
 
-| Command          | Description                          | Options                        |
-| ---------------- | ------------------------------------ | ------------------------------ |
-| `create`         | Scaffold a new @finografic package   | Interactive prompts            |
-| `migrate [path]` | Sync conventions to existing package | `--write`, `--only=<sections>` |
-| `help`           | Show help message                    | -                              |
-| `--help` / `-h`  | Show help (works with commands too)  | -                              |
+<!-- GENERATED:COMMANDS_REF:START -->
+
+| Command         | Description                                  | Options                        |
+| --------------- | -------------------------------------------- | ------------------------------ |
+| `create`        | Scaffold a new @finografic package           | Interactive prompts            |
+| `migrate`       | Sync conventions to an existing package      | `--write`, `--only=<sections>` |
+| `features`      | Add optional features to an existing package | Interactive prompts            |
+| `help`          | Show this help message                       | -                              |
+| `--help` / `-h` | Show help (works with commands too)          | -                              |
 
 See `genx <command> --help` for detailed usage.
+
+<!-- GENERATED:COMMANDS_REF:END -->
 
 ---
 
 ## 🛠️ Development
 
 ```bash
-# Clone the repo
 git clone https://github.com/finografic/genx.git
-
-# Install dependencies
 pnpm install
-
-# Build
 pnpm build
-
-# Run tests
 pnpm test.run
 ```
 
-### Testing the CLI Locally
+### Testing the CLI locally
 
-#### Option 1: Link Globally (Recommended)
-
-Link the built package globally so you can use `genx` from anywhere:
+Link globally (recommended — rebuilds take effect immediately):
 
 ```bash
-# Build and link globally
 pnpm link
-
-# Now you can use it from anywhere:
 genx create
 genx migrate --help
-genx help
 
-# When done testing, unlink:
+# When done:
 pnpm unlink
 ```
 
-**Note:** After making changes, rebuild with `pnpm build` and the linked version will automatically use the new build.
-
-#### Option 2: Direct Node Execution
-
-Run the built binary directly:
-
-```bash
-# Build first
-pnpm build
-
-# Test create (will prompt interactively)
-node dist/index.mjs create
-
-# Test migrate (dry-run) in current directory
-node dist/index.mjs migrate
-
-# Test migrate (dry-run) against another repo
-node dist/index.mjs migrate ../@finografic-core
-
-# Test migrate with --write (be careful!)
-node dist/index.mjs migrate ../@finografic-core --write
-
-# Test migrate with --only flag
-node dist/index.mjs migrate ../@finografic-core --only=package-json --write
-
-# Test help system
-node dist/index.mjs help
-node dist/index.mjs --help
-node dist/index.mjs create --help
-node dist/index.mjs migrate --help
-```
-
-#### Option 3: Using pnpm dlx
-
-You can also use `pnpm dlx` from the project root:
-
-```bash
-pnpm dlx @finografic/genx create
-```
-
-**Note:** `pnpm link` is the fastest for iteration since you only need to rebuild after changes.
+Or run the built binary directly: `node dist/index.mjs create`
 
 ### Documentation
 
-- [Developer Workflow](./docs/DEVELOPER_WORKFLOW.md) - Daily development and testing workflow
-- [Release Process](./docs/RELEASES.md) - How to cut releases
-- [GitHub Packages Setup](./docs/GITHUB_PACKAGES_SETUP.md) - Publishing and consuming packages
+- [Developer Workflow](./docs/DEVELOPER_WORKFLOW.md)
+- [Release Process](./docs/RELEASES.md)
+- [GitHub Packages Setup](./docs/GITHUB_PACKAGES_SETUP.md)
 
 ---
 
