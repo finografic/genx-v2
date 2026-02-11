@@ -51,7 +51,6 @@ describe('template utils', () => {
         author: {
           name: 'Justin',
           email: 'justin@example.com',
-          url: 'https://github.com/justin',
         },
       };
 
@@ -63,7 +62,6 @@ describe('template utils', () => {
       expect(vars.DESCRIPTION).toBe('My cool package');
       expect(vars.AUTHOR_NAME).toBe('Justin');
       expect(vars.AUTHOR_EMAIL).toBe('justin@example.com');
-      expect(vars.AUTHOR_URL).toBe('https://github.com/justin');
       expect(vars.YEAR).toBe(new Date().getFullYear().toString());
     });
   });

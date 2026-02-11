@@ -38,7 +38,10 @@ export async function promptCreatePackage(): Promise<PackageConfigWithFeatures |
 
   return {
     ...manifest,
-    author,
+    author: {
+      ...author,
+      url: '', // Required by @finografic/core PackageConfig type, but not used in templates
+    },
     features,
     packageType,
   };

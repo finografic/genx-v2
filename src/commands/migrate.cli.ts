@@ -98,7 +98,6 @@ export async function migratePackage(argv: string[], context: { cwd: string }): 
     DESCRIPTION: typeof packageJson.description === 'string' ? packageJson.description : '',
     AUTHOR_NAME: '',
     AUTHOR_EMAIL: '',
-    AUTHOR_URL: '',
   };
 
   // Plan all migration changes

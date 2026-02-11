@@ -17,8 +17,7 @@
   },
   "author": {
     "name": "__AUTHOR_NAME__",
-    "email": "__AUTHOR_EMAIL__",
-    "url": "__AUTHOR_URL__"
+    "email": "__AUTHOR_EMAIL__"
   },
   "license": "MIT",
   "keywords": [

@@ -5,10 +5,9 @@ import { emailSchema } from 'utils/validation.utils';
 export type Author = {
   name: string;
   email: string;
-  url: string;
 };
 
-type AuthorField = 'name' | 'email' | 'url';
+type AuthorField = 'name' | 'email';
 
 export async function promptAuthor(
   defaults: Author,
@@ -18,10 +17,9 @@ export async function promptAuthor(
     options: [
       { value: 'name', label: 'Name', hint: defaults.name },
       { value: 'email', label: 'Email', hint: defaults.email },
-      { value: 'url', label: 'URL', hint: defaults.url },
     ],
     placeholder: 'Type to filter fields...',
-    initialValues: ['name', 'email', 'url'],
+    initialValues: ['name', 'email'],
   });
 
   if (clack.isCancel(fields)) {
@@ -34,7 +32,6 @@ export async function promptAuthor(
 
   let name = defaults.name;
   let email = defaults.email;
-  let url = defaults.url;
 
   if (selected.has('name')) {
     const value = await clack.text({
@@ -60,17 +57,7 @@ export async function promptAuthor(
     email = value;
   }
 
-  if (selected.has('url')) {
-    const value = await clack.text({
-      message: 'Author URL:',
-      initialValue: url,
-    });
-
-    if (clack.isCancel(value)) return cancel();
-    url = value;
-  }
-
-  return { name, email, url };
+  return { name, email };
 }
 
 function cancel(): null {

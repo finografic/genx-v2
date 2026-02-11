@@ -44,7 +44,6 @@ export async function applyAiRules(context: FeatureContext): Promise<FeatureAppl
         DESCRIPTION: '',
         AUTHOR_NAME: '',
         AUTHOR_EMAIL: '',
-        AUTHOR_URL: '',
       });
       applied.push(AI_RULES_FILES[0]);
     }
@@ -61,7 +60,6 @@ export async function applyAiRules(context: FeatureContext): Promise<FeatureAppl
         DESCRIPTION: '',
         AUTHOR_NAME: '',
         AUTHOR_EMAIL: '',
-        AUTHOR_URL: '',
       });
       applied.push(AI_RULES_FILES[1]);
     }
