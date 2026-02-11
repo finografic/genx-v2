@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@finografic/genx': 'link:'
+
 importers:
 
   .:
@@ -14,6 +17,9 @@ importers:
       '@finografic/core':
         specifier: ^0.9.2
         version: 0.9.2
+      '@finografic/genx':
+        specifier: 'link:'
+        version: 'link:'
       clack-tree-select:
         specifier: ^1.0.8
         version: 1.0.8(@clack/prompts@1.0.0-alpha.9)
