@@ -119,8 +119,9 @@ body {
 
 .markdown-body blockquote {
   padding: 0 1em;
-  color: var(--fg-dim);
-  border-left: 0.25em solid var(--border-strong);
+  color: #57606a;
+  background-color: var(--code-inline-bg);
+  border-left: 0.25em solid var(--code-inline-fg);
 }
 
 .markdown-body blockquote > :first-child {
