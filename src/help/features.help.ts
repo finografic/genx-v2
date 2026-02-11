@@ -3,7 +3,7 @@ import type { HelpConfig } from 'types/help.types';
 
 export const featuresHelp: HelpConfig = {
   main: {
-    bin: 'finografic-create features',
+    bin: 'genx features',
   },
 
   examples: {
@@ -11,7 +11,7 @@ export const featuresHelp: HelpConfig = {
     list: [
       {
         label: 'Add features to current directory',
-        description: 'finografic-create features',
+        description: 'genx features',
       },
     ],
   },
@@ -20,7 +20,7 @@ export const featuresHelp: HelpConfig = {
     title: 'Show Help',
     list: [
       {
-        label: 'finografic-create features --help',
+        label: 'genx features --help',
         description: 'Show this help message',
       },
     ],

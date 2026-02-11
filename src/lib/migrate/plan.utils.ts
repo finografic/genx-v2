@@ -153,7 +153,7 @@ export async function planMigration(
         `templateDir: ${templateDir}`,
         `importMetaDir: ${fromDir}`,
         `packageRoot: ${packageRoot}`,
-        'If running a linked build, re-run `pnpm build` in @finografic/create.',
+        'If running a linked build, re-run `pnpm build` in @finografic/genx.',
       ].join('\n'),
     );
     safeExit(1);

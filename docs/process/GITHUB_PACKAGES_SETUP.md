@@ -334,9 +334,9 @@ Without this, pnpm/npm will look in npmjs.com (wrong registry)
 
 For packages that depend on other @finografic packages:
 
-### Example: @finografic/create depends on @finografic/core
+### Example: @finografic/genx depends on @finografic/core
 
-**In @finografic/create:**
+**In @finografic/genx:**
 
 ```json
 {

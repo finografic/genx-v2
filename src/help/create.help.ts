@@ -3,7 +3,7 @@ import type { HelpConfig } from 'types/help.types';
 
 export const createHelp: HelpConfig = {
   main: {
-    bin: 'finografic-create create',
+    bin: 'genx create',
   },
 
   examples: {
@@ -11,7 +11,7 @@ export const createHelp: HelpConfig = {
     list: [
       {
         label: 'Create a new package interactively',
-        description: 'finografic-create create',
+        description: 'genx create',
       },
     ],
   },
@@ -20,7 +20,7 @@ export const createHelp: HelpConfig = {
     title: 'Show Help',
     list: [
       {
-        label: 'finografic-create create --help',
+        label: 'genx create --help',
         description: 'Show this help message',
       },
     ],

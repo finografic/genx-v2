@@ -1,4 +1,4 @@
-# 🦋 @finografic/create
+# 🦋 @finografic/genx
 
 > Opinionated generator and codemod toolkit for the **@finografic** ecosystem.
 
@@ -31,14 +31,14 @@ Run directly using `pnpm dlx`:
 
 ```bash
 # Show help
-pnpm dlx @finografic/create help
-pnpm dlx @finografic/create --help
+pnpm dlx @finografic/genx help
+pnpm dlx @finografic/genx --help
 
 # Create a new package (interactive)
-pnpm dlx @finografic/create create
+pnpm dlx @finografic/genx create
 
 # Migrate an existing package (dry-run by default)
-pnpm dlx @finografic/create migrate
+pnpm dlx @finografic/genx migrate
 ```
 
 ### Create Command
@@ -46,7 +46,7 @@ pnpm dlx @finografic/create migrate
 Scaffolds a new `@finografic` package interactively:
 
 ```bash
-pnpm dlx @finografic/create create
+pnpm dlx @finografic/genx create
 ```
 
 The CLI will prompt you for:
@@ -70,19 +70,19 @@ Syncs conventions to an existing `@finografic` package. **Dry-run by default** -
 
 ```bash
 # Dry run in the current directory
-pnpm dlx @finografic/create migrate
+pnpm dlx @finografic/genx migrate
 
 # Dry run against a target directory
-pnpm dlx @finografic/create migrate ../some-repo
+pnpm dlx @finografic/genx migrate ../some-repo
 
 # Apply changes
-pnpm dlx @finografic/create migrate ../some-repo --write
+pnpm dlx @finografic/genx migrate ../some-repo --write
 
 # Only update specific sections
-pnpm dlx @finografic/create migrate --only=package-json,eslint --write
+pnpm dlx @finografic/genx migrate --only=package-json,eslint --write
 
 # Get help for migrate command
-pnpm dlx @finografic/create migrate --help
+pnpm dlx @finografic/genx migrate --help
 ```
 
 **Available `--only` sections:**
@@ -176,7 +176,7 @@ my-package/
 | `help`           | Show help message                    | -                              |
 | `--help` / `-h`  | Show help (works with commands too)  | -                              |
 
-See `finografic-create <command> --help` for detailed usage.
+See `genx <command> --help` for detailed usage.
 
 ---
 
@@ -184,7 +184,7 @@ See `finografic-create <command> --help` for detailed usage.
 
 ```bash
 # Clone the repo
-git clone https://github.com/finografic/create.git
+git clone https://github.com/finografic/genx.git
 
 # Install dependencies
 pnpm install
@@ -200,16 +200,16 @@ pnpm test.run
 
 #### Option 1: Link Globally (Recommended)
 
-Link the built package globally so you can use `finografic-create` from anywhere:
+Link the built package globally so you can use `genx` from anywhere:
 
 ```bash
 # Build and link globally
 pnpm link
 
 # Now you can use it from anywhere:
-finografic-create create
-finografic-create migrate --help
-finografic-create help
+genx create
+genx migrate --help
+genx help
 
 # When done testing, unlink:
 pnpm unlink
@@ -252,7 +252,7 @@ node dist/index.mjs migrate --help
 You can also use `pnpm dlx` from the project root:
 
 ```bash
-pnpm dlx @finografic/create create
+pnpm dlx @finografic/genx create
 ```
 
 **Note:** `pnpm link` is the fastest for iteration since you only need to rebuild after changes.

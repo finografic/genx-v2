@@ -91,7 +91,7 @@ export async function createPackage(argv: string[], context: { cwd: string }): P
           `templateDir: ${templateDir}`,
           `importMetaDir: ${fromDir}`,
           `packageRoot: ${packageRoot}`,
-          'If running a linked build, re-run `pnpm build` in @finografic/create.',
+          'If running a linked build, re-run `pnpm build` in @finografic/genx.',
         ].join('\n'),
       );
     }

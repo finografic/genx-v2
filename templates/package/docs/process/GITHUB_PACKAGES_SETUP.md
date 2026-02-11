@@ -2,9 +2,9 @@
 
 This repository follows the **@finografic “locked” GitHub Packages flow** (PAT-based `NPM_TOKEN`, workflow permissions, `.npmrc` scope config).
 
-To avoid duplicating and drifting instructions, the canonical, fully detailed guide lives in `@finografic/create`:
+To avoid duplicating and drifting instructions, the canonical, fully detailed guide lives in `@finografic/genx`:
 
-- `@finografic/create/docs/GITHUB_PACKAGES_SETUP.md`
+- `@finografic/genx/docs/GITHUB_PACKAGES_SETUP.md`
 
 If you’re setting up a new machine or a new repo, open that doc and follow it exactly.
 

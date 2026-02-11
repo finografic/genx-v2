@@ -2,12 +2,12 @@
 
 ## Goal
 
-Update `@finografic/create` (and `migrate`) so that newly generated packages use the **canonical ESLint config template** shipped inside:
+Update `@finografic/genx` (and `migrate`) so that newly generated packages use the **canonical ESLint config template** shipped inside:
 
 - `@finografic/eslint-config`
 - (and optionally, formatting config from `@finografic/dprint-config`)
 
-This replaces the current behavior where `eslint.config.ts` is copied from local `templates/` inside `@finografic/create`.
+This replaces the current behavior where `eslint.config.ts` is copied from local `templates/` inside `@finografic/genx`.
 
 **Single source of truth** should live in the config packages themselves.
 
@@ -17,7 +17,7 @@ This replaces the current behavior where `eslint.config.ts` is copied from local
 
 - Avoid duplicated templates across repos
 - Keep generated projects aligned with the latest `@finografic/eslint-config` structure
-- Enable iterative refactors to `@finografic/eslint-config` without manually updating `@finografic/create`
+- Enable iterative refactors to `@finografic/eslint-config` without manually updating `@finografic/genx`
 - Make the ecosystem consistent and “platform-like” (CV-quality)
 
 ---
@@ -103,7 +103,7 @@ Migration should be non-destructive and reversible.
 
 ## dprint integration (optional)
 
-If the user selects formatting via dprint in `@finografic/create`:
+If the user selects formatting via dprint in `@finografic/genx`:
 
 Install:
 
@@ -139,19 +139,19 @@ Generate a lightweight `dprint.json`:
 
 ---
 
-## Implementation notes for @finografic/create
+## Implementation notes for @finografic/genx
 
 ### Required capabilities
 
 - Determine installed package path at runtime (Node resolution)
 - Copy template files from `node_modules/.../templates/*`
-- Avoid hardcoding template content in `@finografic/create`
+- Avoid hardcoding template content in `@finografic/genx`
 
 ### Recommended approach
 
 - Always copy from installed packages
 - Treat config packages as immutable “golden sources”
-- Keep `@finografic/create/templates/` as a fallback only (temporary)
+- Keep `@finografic/genx/templates/` as a fallback only (temporary)
 
 ---
 
@@ -175,7 +175,7 @@ Blocked until:
 
 - `@finografic/eslint-config` refactor is complete
 - the package exports + templates are stable
-- the package is ready to be depended on by `@finografic/create`
+- the package is ready to be depended on by `@finografic/genx`
 
 ---
 
@@ -184,6 +184,6 @@ Blocked until:
 - [ ] Add `templates/` folder to `@finografic/eslint-config` package output (`files` whitelist)
 - [ ] Add canonical `eslint.config.ts` template (layered)
 - [ ] Add optional `eslint.config.fino.ts` template (bridge)
-- [ ] Update `@finografic/create` to install dependency first, then copy template
+- [ ] Update `@finografic/genx` to install dependency first, then copy template
 - [ ] Update `migrate` to back up existing config and replace using canonical template
 - [ ] Add a verification step (`pnpm lint`) to validate output

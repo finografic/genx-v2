@@ -1,16 +1,16 @@
 {
-  "name": "@finografic/create",
+  "name": "@finografic/genx",
   "type": "module",
   "version": "1.6.0",
   "packageManager": "pnpm@10.8.0",
   "description": "Opinionated generator and codemod toolkit for the @finografic ecosystem.",
-  "homepage": "https://github.com/finografic/create",
+  "homepage": "https://github.com/finografic/genx",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/finografic/create.git"
+    "url": "git+https://github.com/finografic/genx.git"
   },
   "bugs": {
-    "url": "https://github.com/finografic/create/issues"
+    "url": "https://github.com/finografic/genx/issues"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -30,7 +30,7 @@
     "cli"
   ],
   "bin": {
-    "finografic-create": "./dist/index.mjs"
+    "genx": "./dist/index.mjs"
   },
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -70,7 +70,7 @@
     "release.check": "pnpm lint.fix && pnpm typecheck && pnpm test.run",
     "release.publish": "pnpm publish --registry https://npm.pkg.github.com",
     "·········· REGISTRIES": "··············································",
-    "view.registry.github": "pnpm view @finografic/create --registry=https://npm.pkg.github.com",
+    "view.registry.github": "pnpm view @finografic/genx --registry=https://npm.pkg.github.com",
     "·········· PACKAGES": "··················································",
     "update.core": "pnpm update @finografic/core --latest",
     "update.eslint-config": "pnpm update @finografic/eslint-config --latest",

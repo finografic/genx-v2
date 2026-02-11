@@ -3,7 +3,7 @@ import type { HelpConfig } from 'types/help.types';
 
 export const rootHelp: HelpConfig = {
   main: {
-    bin: 'finografic-create',
+    bin: 'genx',
     args: '<command> [options]',
   },
 
@@ -25,19 +25,19 @@ export const rootHelp: HelpConfig = {
   examples: {
     title: 'Examples',
     list: [
-      { label: 'Create a new package', description: 'finografic-create create' },
-      { label: 'Migrate current directory (dry-run)', description: 'finografic-create migrate' },
+      { label: 'Create a new package', description: 'genx create' },
+      { label: 'Migrate current directory (dry-run)', description: 'genx migrate' },
       {
         label: 'Migrate a specific directory (apply changes)',
-        description: 'finografic-create migrate ../my-package --write',
+        description: 'genx migrate ../my-package --write',
       },
       {
         label: 'Migrate only specific sections',
-        description: 'finografic-create migrate --only=package-json,eslint --write',
+        description: 'genx migrate --only=package-json,eslint --write',
       },
       {
         label: 'Add features to current directory',
-        description: 'finografic-create features',
+        description: 'genx features',
       },
     ],
   },
@@ -45,8 +45,8 @@ export const rootHelp: HelpConfig = {
   footer: {
     title: 'Show Help',
     list: [
-      { label: 'finografic-create help', description: '' },
-      { label: 'finografic-create <command> --help', description: '' },
+      { label: 'genx help', description: '' },
+      { label: 'genx <command> --help', description: '' },
     ],
   },
 
