@@ -26,7 +26,7 @@
       "features/*": ["./src/features/*"],
       "help/*": ["./src/help/*"],
       "lib/*": ["src/lib/*"],
-      "templates/*": ["./templates/*"],
+      "_templates/*": ["./_templates/*"],
       "types": ["./src/types"],
       "types/*": ["./src/types/*"],
       "utils": ["./src/utils"],
@@ -36,8 +36,8 @@
   "include": [
     "src/**/*",
     "eslint.config.ts",
-    "templates/package/eslint.config.ts",
-    "templates/package/src/declarations.d.ts"
+    "_templates/package/eslint.config.ts",
+    "_templates/package/src/declarations.d.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

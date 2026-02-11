@@ -13,9 +13,9 @@ export interface EnsureDprintConfigOptions {
  * Ensure a minimal `dprint.jsonc` exists in the target directory that extends
  * `@finografic/dprint-config`.
  *
- * This is intentionally generated (not stored in templates/) so that running
+ * This is intentionally generated (not stored in _templates/) so that running
  * `dprint check` in this repo doesn't try to resolve `node_modules/...` inside
- * `templates/`.
+ * `_templates/`.
  */
 export async function ensureDprintConfig(
   targetDir: string,

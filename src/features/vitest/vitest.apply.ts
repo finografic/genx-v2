@@ -143,7 +143,7 @@ async function ensureVitestConfig(context: FeatureContext): Promise<{ wrote: boo
   // Get template directory
   const fromDir = fileURLToPath(new URL('.', import.meta.url));
   const packageRoot = findPackageRoot(fromDir);
-  const templateVitestConfigPath = resolve(packageRoot, 'templates/package/vitest.config.ts');
+  const templateVitestConfigPath = resolve(packageRoot, '_templates/package/vitest.config.ts');
 
   if (!fileExists(templateVitestConfigPath)) {
     throw new Error('Template vitest.config.ts not found');

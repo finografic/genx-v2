@@ -102,7 +102,7 @@ export async function createPackage(argv: string[], context: { cwd: string }): P
       ignore: selectedFeatures.has('aiRules') ? [] : createConfig.ignorePatterns.aiRules,
     });
 
-    // Generate dprint.jsonc (do not store this in templates/ to avoid dprint
+    // Generate dprint.jsonc (do not store this in _templates/ to avoid dprint
     // resolving node_modules paths inside the template directory)
     if (selectedFeatures.has('dprint')) {
       await ensureDprintConfig(targetDir);

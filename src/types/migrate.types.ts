@@ -16,13 +16,13 @@ export type MigrateConfig = {
   defaultScope: string;
 
   /**
-   * Files/dirs to sync from `templates/package/` into the target repository.
+   * Files/dirs to sync from `_templates/package/` into the target repository.
    * These are treated as "locked" convention surfaces.
    *
    * NOTE: copy is template-aware (token replacement) for common text formats.
    */
   syncFromTemplate: Array<{
-    /** Path relative to `templates/package` */
+    /** Path relative to `_templates/package` */
     templatePath: string;
     /** Path relative to target repo root */
     targetPath: string;

@@ -20,9 +20,9 @@ export function findPackageRoot(startDir: string): string {
 }
 
 /**
- * Resolve `templates/package` regardless of whether we're running from `src/` or `dist/`.
+ * Resolve `_templates/package` regardless of whether we're running from `src/` or `dist/`.
  */
 export function getTemplatesPackageDir(fromDir: string): string {
   const root = findPackageRoot(fromDir);
-  return resolve(root, 'templates/package');
+  return resolve(root, '_templates/package');
 }

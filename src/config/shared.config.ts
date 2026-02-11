@@ -9,7 +9,7 @@ export interface SharedConfig {
 
   /**
    * Package.json scripts that should be present in all @finografic packages.
-   * These match what's in templates/package/package.json.
+   * These match what's in _templates/package/package.json.
    */
   packageJsonScripts: Record<string, string>;
 
@@ -35,7 +35,7 @@ export const sharedConfig: SharedConfig = {
 
   /**
    * Package.json scripts that should be present in all @finografic packages.
-   * These match what's in templates/package/package.json.
+   * These match what's in _templates/package/package.json.
    */
   packageJsonScripts: {
     test: 'vitest',
