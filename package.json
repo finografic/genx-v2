@@ -23,7 +23,6 @@
   "license": "MIT",
   "keywords": [
     "finografic",
-    "create",
     "generator",
     "scaffold",
     "codemod",
@@ -80,6 +79,8 @@
     "·········· UTILS": "·····················································",
     "tsc.debug": "tsc --pretty --project tsconfig.json",
     "typecheck": "tsc --project tsconfig.json --noEmit",
+    "·········· DOCS": "·······················································",
+    "docs.usage": "tsx scripts/generate-readme-usage.ts",
     "·········· HOOKS": "·····················································",
     "prepack": "pnpm build",
     "prepare": "simple-git-hooks"

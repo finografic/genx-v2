@@ -14,103 +14,131 @@ It is designed to be **run**, not installed.
 
 ## ✨ Features
 
-- 📦 Scaffold new `@finografic` packages
-- 🎛 Interactive CLI powered by `@clack/prompts`
-- 📐 Flat, modern tooling defaults (ESLint v9, pnpm, ESM)
-- 🔧 Full TypeScript configuration
-- ✅ Vitest for testing
-- 🚀 GitHub release workflow
-- 🤖 Optional AI rules (Copilot instructions)
-- 🧠 No hidden lifecycle hooks or side effects
+<!-- GENERATED:FEATURES:START -->
+
+### dprint
+
+Code formatting via `@finografic/dprint-config`.
+
+- Installs `@finografic/dprint-config`
+- Creates `dprint.jsonc`
+- Adds `format` / `format.check` scripts
+- Replaces Prettier if present (uninstall + backup configs)
+- Adds VSCode extension recommendation
+- Configures language formatters in `.vscode/settings.json`
+
+### vitest
+
+Testing via Vitest.
+
+- Installs `vitest`
+- Adds `test` / `test.run` / `test.coverage` scripts
+
+### ai-rules
+
+AI coding assistant rules (GitHub Copilot instructions).
+
+- Copies `.github/copilot-instructions.md`
+- Copies `.github/instructions/` folder
+
+### markdown
+
+Markdown linting via `eslint-plugin-markdownlint`.
+
+- Installs `eslint-plugin-markdownlint`
+- Adds markdown block to `eslint.config.ts`
+- Adds `[markdown]` settings to `.vscode/settings.json`
+- Adds `markdownlint.config` to `.vscode/settings.json`
+- Adds VSCode extension recommendation
+- Copies `markdown-custom.css` for preview styling
+
+### git-hooks
+
+Pre-commit linting + conventional commits.
+
+- Installs `lint-staged`, `simple-git-hooks`
+- Installs `@commitlint/cli`, `@commitlint/config-conventional`
+- Adds `lint-staged` config to package.json
+- Adds `simple-git-hooks` config to package.json
+- Creates `commitlint.config.mjs`
+- Ensures `prepare` script runs `simple-git-hooks`
+
+<!-- GENERATED:FEATURES:END -->
 
 ---
 
 ## 🚀 Usage
 
+<!-- GENERATED:USAGE:START -->
+
 Run directly using `pnpm dlx`:
 
 ```bash
-# Show help
-pnpm dlx @finografic/genx help
-pnpm dlx @finografic/genx --help
-
-# Create a new package (interactive)
-pnpm dlx @finografic/genx create
-
-# Migrate an existing package (dry-run by default)
-pnpm dlx @finografic/genx migrate
+pnpm dlx @finografic/genx <command> [options]
 ```
 
-### Create Command
+| Command    | Description                                  |
+| ---------- | -------------------------------------------- |
+| `create`   | Scaffold a new @finografic package           |
+| `migrate`  | Sync conventions to an existing package      |
+| `features` | Add optional features to an existing package |
+| `help`     | Show this help message                       |
 
-Scaffolds a new `@finografic` package interactively:
+### `genx create`
 
 ```bash
-pnpm dlx @finografic/genx create
+genx create
 ```
 
-The CLI will prompt you for:
-
-1. Package scope (default: `finografic`)
-2. Package name (e.g., `my-package`)
-3. Package description
-4. Author information (name, email, URL)
-5. Optional features (AI rules, vitest, GitHub workflow)
-
-Then it will:
-
-- Create the project directory
-- Copy and configure all template files
-- Install dependencies
-- Initialize git with an initial commit
-
-### Migrate Command
-
-Syncs conventions to an existing `@finografic` package. **Dry-run by default** - no files are modified unless `--write` is passed.
+**Examples:**
 
 ```bash
-# Dry run in the current directory
-pnpm dlx @finografic/genx migrate
+# Create a new package interactively
+genx create
+```
 
-# Dry run against a target directory
-pnpm dlx @finografic/genx migrate ../some-repo
+### `genx migrate`
 
-# Apply changes
-pnpm dlx @finografic/genx migrate ../some-repo --write
+```bash
+genx migrate [path] [options]
+```
+
+**Examples:**
+
+```bash
+# Dry run in current directory
+genx migrate
+
+# Dry run against a specific directory
+genx migrate ../my-package
+
+# Apply changes to a directory
+genx migrate ../my-package --write
 
 # Only update specific sections
-pnpm dlx @finografic/genx migrate --only=package-json,eslint --write
+genx migrate --only=package-json,eslint --write
 
-# Get help for migrate command
-pnpm dlx @finografic/genx migrate --help
+# Update dependencies and Node version
+genx migrate --only=dependencies,node --write
+
+# Normalize file names and merge configs
+genx migrate --only=renames,merges --write
 ```
 
-**Available `--only` sections:**
+### `genx features`
 
-- `package-json` - Update scripts, lint-staged, keywords
-- `dependencies` - Align dependencies to canonical versions
-- `node` - Update Node version (`.nvmrc`, GitHub Actions, `@types/node`)
-- `renames` - Normalize file names (e.g., `.eslintrc` → `eslint.config.ts`)
-- `merges` - Merge template files with existing files
-- `hooks` - Sync `.simple-git-hooks.mjs`
-- `nvmrc` - Sync `.nvmrc` (Node version)
-- `eslint` - Sync `eslint.config.ts` and `src/declarations.d.ts`
-- `workflows` - Sync `.github/workflows/release.yml`
-- `docs` - Sync `docs/` directory
+```bash
+genx features
+```
 
-**What gets migrated:**
+**Examples:**
 
-- Package.json scripts (test, lint, release, etc.)
-- lint-staged configuration
-- Keywords (ensures `finografic` and package name)
-- Dependencies (aligns versions to canonical policy)
-- Node version (`.nvmrc`, GitHub Actions workflow, `@types/node`)
-- File normalization (renames alternative config files to canonical names)
-- File merging (intelligently merges template files with existing content)
-- Git hooks configuration
-- ESLint configuration and TypeScript declarations
-- GitHub release workflow
-- Documentation files
+```bash
+# Add features to current directory
+genx features
+```
+
+<!-- GENERATED:USAGE:END -->
 
 ---
 
