@@ -116,11 +116,11 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
-      "dprint fmt",
+      "dprint fmt --allow-no-files",
       "eslint --fix"
     ],
     "*.{json,jsonc,md,yml,yaml,toml}": [
-      "dprint fmt"
+      "dprint fmt --allow-no-files"
     ]
   },
   "simple-git-hooks": {
