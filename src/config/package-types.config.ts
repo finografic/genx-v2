@@ -7,7 +7,7 @@ export const PACKAGE_TYPES: PackageType[] = [
   {
     id: 'library',
     label: 'Library',
-    description: 'A reusable TypeScript library',
+    description: 'reusable TypeScript library',
     packageJsonDefaults: {},
     entryPoints: ['src/index.ts'],
     keywords: ['library'],
@@ -16,7 +16,7 @@ export const PACKAGE_TYPES: PackageType[] = [
   {
     id: 'cli',
     label: 'CLI',
-    description: 'A command-line tool',
+    description: 'command-line tool',
     packageJsonDefaults: {
       bin: { __PKG_NAME__: './dist/index.mjs' },
     },
@@ -27,7 +27,7 @@ export const PACKAGE_TYPES: PackageType[] = [
   {
     id: 'config',
     label: 'Config',
-    description: 'A shared configuration package',
+    description: 'shared configuration package',
     packageJsonDefaults: {},
     entryPoints: ['src/index.ts'],
     keywords: ['config', 'shared-config'],
