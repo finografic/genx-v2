@@ -54,6 +54,8 @@ export const sharedConfig: SharedConfig = {
       'pnpm run release.check && pnpm version minor && git push --follow-tags',
     'release.github.major':
       'pnpm run release.check && pnpm version major && git push --follow-tags',
+    link: 'pnpm build && pnpm link --global',
+    unlink: 'pnpm unlink --global',
     prepack: 'pnpm build',
     prepare: 'simple-git-hooks',
   },

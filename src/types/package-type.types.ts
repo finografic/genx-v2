@@ -17,6 +17,8 @@ export interface PackageType {
   entryPoints: string[];
   /** Keywords added to package.json */
   keywords: string[];
+  /** Scripts merged into package.json (on top of the base template) */
+  scripts?: Record<string, string>;
   /** Features pre-selected by default for this type */
   defaultFeatures: FeatureId[];
 }

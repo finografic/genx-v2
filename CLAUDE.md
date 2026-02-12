@@ -31,4 +31,4 @@ Claude Code maintains a lightweight session log at `.claude/memory.md` (gitignor
 - One-line summary of what was done
 - Any important decisions or context for next session
 
-Keep only the **last 3 sessions** in the file (delete older entries when appending). Each entry should be 2-4 lines max — this is a breadcrumb trail, not a journal.
+Keep only the **last 5 sessions** in the file (delete older entries when appending). Each entry should be 2-4 lines max — this is a breadcrumb trail, not a journal.
