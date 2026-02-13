@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { execa } from 'execa';
 import { FORMATTING_SECTION_TITLE } from 'features/dprint/dprint.constants';
-import { ensureDprintConfig } from 'features/dprint/dprint.template';
+import { getFeature } from 'features/feature-registry';
 import { createHelp } from 'help/create.help';
 
 import { generateEslintConfig } from 'lib/generators/eslint-config.generator';
@@ -191,12 +191,6 @@ export async function createPackage(argv: string[], context: { cwd: string }): P
       );
     }
 
-    // Generate dprint.jsonc (do not store this in _templates/ to avoid dprint
-    // resolving node_modules paths inside the template directory)
-    if (selectedFeatures.has('dprint')) {
-      await ensureDprintConfig(targetDir);
-    }
-
     // Generate eslint.config.ts based on package type + selected features
     const eslintContent = generateEslintConfig({
       globals: config.packageType.eslint.globals,
@@ -224,7 +218,14 @@ export async function createPackage(argv: string[], context: { cwd: string }): P
     errorMessage('You can run `pnpm install` manually');
   }
 
-  // 6. Initialize git
+  // 6. Apply selected features (after install so node_modules exist)
+  for (const featureId of config.features) {
+    const feature = getFeature(featureId);
+    if (!feature) continue;
+    await feature.apply({ targetDir });
+  }
+
+  // 7. Initialize git
   const gitSpin = spinner();
   gitSpin.start('Initializing git repository...');
 
@@ -240,7 +241,7 @@ export async function createPackage(argv: string[], context: { cwd: string }): P
     errorMessage('You can initialize git manually');
   }
 
-  // 7. Done!
+  // 8. Done!
   outro('Package created successfully!');
 
   console.log(pc.dim('Next steps:'));

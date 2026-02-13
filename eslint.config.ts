@@ -66,12 +66,6 @@ const config: Linter.Config[] = [
       ],
       '@typescript-eslint/no-redeclare': 'warn',
 
-      // Stylistic
-      'stylistic/semi': ['error'],
-      'stylistic/quotes': ['error', 'single'],
-      'stylistic/indent': ['error', 2, { SwitchCase: 1 }],
-      'stylistic/no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
-      'stylistic/no-trailing-spaces': 'error',
       'stylistic/no-multi-spaces': ['error', { exceptions: { Property: true } }],
       'stylistic/object-curly-spacing': ['error', 'always'],
       'stylistic/comma-spacing': ['error', { before: false, after: true }],

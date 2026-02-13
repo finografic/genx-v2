@@ -8,11 +8,14 @@ import {
   fileExists,
   installDevDependency,
   isDependencyDeclared,
+  readSettingsJson,
   removeDependency,
   spinner,
   successMessage,
+  writeSettingsJson,
 } from 'utils';
 import {
+  ESLINT_CONFIG_FILES,
   PACKAGE_JSON,
   PACKAGE_JSON_SCRIPTS_SECTION_DIVIDER,
   PACKAGE_JSON_SCRIPTS_SECTION_PREFIX,
@@ -240,6 +243,60 @@ async function addFormattingScripts(
 }
 
 /**
+ * Formatting-focused stylistic rules that dprint handles.
+ * These are removed from eslint.config.ts when dprint is installed.
+ */
+const DPRINT_COVERED_STYLISTIC_RULES = [
+  'stylistic/semi',
+  'stylistic/quotes',
+  'stylistic/indent',
+  'stylistic/comma-dangle',
+  'stylistic/no-trailing-spaces',
+  'stylistic/no-multiple-empty-lines',
+];
+
+/**
+ * Strip formatting-focused stylistic rules from eslint.config.ts.
+ * dprint handles these; keeping them causes duplicate/conflicting enforcement.
+ */
+async function stripFormattingStylisticRules(targetDir: string): Promise<boolean> {
+  let eslintConfigPath: string | null = null;
+  for (const candidate of ESLINT_CONFIG_FILES) {
+    const filePath = resolve(targetDir, candidate);
+    if (fileExists(filePath)) {
+      eslintConfigPath = filePath;
+      break;
+    }
+  }
+
+  if (!eslintConfigPath) return false;
+
+  const content = await readFile(eslintConfigPath, 'utf8');
+  let updated = content;
+
+  // Remove lines for each covered rule (handles single-line and multi-line array values)
+  for (const rule of DPRINT_COVERED_STYLISTIC_RULES) {
+    // Match the full line(s) for the rule, including multi-line values like ['error', 2, { ... }]
+    const escaped = rule.replace(/\//g, '\\/');
+    const regex = new RegExp(`^\\s*'${escaped}':.+\\n`, 'gm');
+    updated = updated.replace(regex, '');
+  }
+
+  // Remove the "// Stylistic" comment line
+  updated = updated.replace(/^\s*\/\/ Stylistic\n/gm, '');
+
+  // Clean up triple+ blank lines to double
+  updated = updated.replace(/\n{3,}/g, '\n\n');
+
+  if (updated !== content) {
+    await writeFile(eslintConfigPath, updated, 'utf8');
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Apply dprint feature to an existing package.
  * Replaces Prettier if present (uninstall + backup configs), then installs
  * @finografic/dprint-config, creates dprint.jsonc, adds formatting scripts,
@@ -326,6 +383,32 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
         `Configured dprint as formatter for: ${settingsResult.addedLanguages.join(', ')}`,
       );
     }
+  }
+
+  // 6. Add dprint-specific VSCode settings
+  const settings = await readSettingsJson(context.targetDir);
+  let dprintSettingsModified = false;
+  if (settings['dprint.experimentalLsp'] !== true) {
+    settings['dprint.experimentalLsp'] = true;
+    dprintSettingsModified = true;
+  }
+  if (settings['dprint.verbose'] !== true) {
+    settings['dprint.verbose'] = true;
+    dprintSettingsModified = true;
+  }
+  if (dprintSettingsModified) {
+    await writeSettingsJson(context.targetDir, settings);
+    if (!applied.includes('.vscode/settings.json')) {
+      applied.push('.vscode/settings.json');
+    }
+    successMessage('Added dprint settings to VSCode');
+  }
+
+  // 7. Strip formatting stylistic rules from eslint config (dprint handles these)
+  const strippedRules = await stripFormattingStylisticRules(context.targetDir);
+  if (strippedRules) {
+    applied.push('eslint.config.ts (removed dprint-covered stylistic rules)');
+    successMessage('Removed formatting stylistic rules from ESLint config');
   }
 
   if (applied.length === 0) {
