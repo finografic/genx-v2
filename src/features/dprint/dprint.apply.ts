@@ -8,11 +8,9 @@ import {
   fileExists,
   installDevDependency,
   isDependencyDeclared,
-  readSettingsJson,
   removeDependency,
   spinner,
   successMessage,
-  writeSettingsJson,
 } from 'utils';
 import {
   ESLINT_CONFIG_FILES,
@@ -23,6 +21,7 @@ import {
 import type { PackageJson } from 'types/package-json.types';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
+  DPRINT_COVERED_STYLISTIC_RULES,
   DPRINT_PACKAGE,
   DPRINT_PACKAGE_VERSION,
   DPRINT_VSCODE_EXTENSION,
@@ -33,7 +32,7 @@ import {
   PRETTIER_PACKAGES,
 } from './dprint.constants';
 import { ensureDprintConfig } from './dprint.template';
-import { getDprintLanguages } from './dprint.vscode';
+import { applyDprintVSCodeSettings, getDprintLanguages } from './dprint.vscode';
 
 /**
  * Convert a glob pattern (e.g., "*prettier-plugin-*") to a regex for matching package names.
@@ -243,19 +242,6 @@ async function addFormattingScripts(
 }
 
 /**
- * Formatting-focused stylistic rules that dprint handles.
- * These are removed from eslint.config.ts when dprint is installed.
- */
-const DPRINT_COVERED_STYLISTIC_RULES = [
-  'stylistic/semi',
-  'stylistic/quotes',
-  'stylistic/indent',
-  'stylistic/comma-dangle',
-  'stylistic/no-trailing-spaces',
-  'stylistic/no-multiple-empty-lines',
-];
-
-/**
  * Strip formatting-focused stylistic rules from eslint.config.ts.
  * dprint handles these; keeping them causes duplicate/conflicting enforcement.
  */
@@ -386,18 +372,8 @@ export async function applyDprint(context: FeatureContext): Promise<FeatureApply
   }
 
   // 6. Add dprint-specific VSCode settings
-  const settings = await readSettingsJson(context.targetDir);
-  let dprintSettingsModified = false;
-  if (settings['dprint.experimentalLsp'] !== true) {
-    settings['dprint.experimentalLsp'] = true;
-    dprintSettingsModified = true;
-  }
-  if (settings['dprint.verbose'] !== true) {
-    settings['dprint.verbose'] = true;
-    dprintSettingsModified = true;
-  }
+  const dprintSettingsModified = await applyDprintVSCodeSettings(context.targetDir);
   if (dprintSettingsModified) {
-    await writeSettingsJson(context.targetDir, settings);
     if (!applied.includes('.vscode/settings.json')) {
       applied.push('.vscode/settings.json');
     }

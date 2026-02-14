@@ -5,7 +5,7 @@
  * configured for dprint based on project dependencies.
  */
 
-import { hasAnyDependency } from 'utils';
+import { hasAnyDependency, readSettingsJson, writeSettingsJson } from 'utils';
 import {
   DPRINT_CATEGORY_DEPENDENCIES,
   DPRINT_LANGUAGE_CATEGORIES,
@@ -57,6 +57,31 @@ export async function getDprintLanguages(targetDir: string): Promise<string[]> {
   }
 
   return languages;
+}
+
+/**
+ * Apply dprint-specific VSCode settings (experimentalLsp, verbose).
+ */
+export async function applyDprintVSCodeSettings(
+  targetDir: string,
+): Promise<boolean> {
+  const settings = await readSettingsJson(targetDir);
+  let modified = false;
+
+  if (settings['dprint.experimentalLsp'] !== true) {
+    settings['dprint.experimentalLsp'] = true;
+    modified = true;
+  }
+  if (settings['dprint.verbose'] !== true) {
+    settings['dprint.verbose'] = true;
+    modified = true;
+  }
+
+  if (modified) {
+    await writeSettingsJson(targetDir, settings);
+  }
+
+  return modified;
 }
 
 /**
