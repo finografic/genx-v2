@@ -1,31 +1,24 @@
-import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFile, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 import {
   addExtensionRecommendations,
   fileExists,
   installDevDependency,
   isDependencyDeclared,
-  readSettingsJson,
   spinner,
   successMessage,
-  writeSettingsJson,
 } from 'utils';
 import { ESLINT_CONFIG_FILES } from 'config/constants.config';
 import type { FeatureApplyResult, FeatureContext } from '../feature.types';
 import {
   ESLINT_MARKDOWN_CONFIG_BLOCK,
   ESLINT_MARKDOWN_IMPORTS,
-  MARKDOWN_STYLES_KEY,
-  MARKDOWN_VSCODE_SETTINGS,
-  MARKDOWNLINT_CONFIG_KEY,
   MARKDOWNLINT_PACKAGE,
   MARKDOWNLINT_PACKAGE_VERSION,
   MARKDOWNLINT_VSCODE_EXTENSION,
 } from './markdown.constants';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { applyMarkdownVSCodeSettings, copyMarkdownCss } from './markdown.vscode';
 
 /**
  * Find the eslint config file in the target directory.
@@ -104,75 +97,6 @@ async function addMarkdownToEslintConfig(eslintConfigPath: string): Promise<bool
 }
 
 /**
- * Add markdown settings to VSCode settings.json.
- * Only adds markdownlint.config and markdown.styles (no [markdown] / dprint.dprint).
- */
-async function addMarkdownVSCodeSettings(targetDir: string): Promise<boolean> {
-  const settings = await readSettingsJson(targetDir);
-  let modified = false;
-
-  if (!settings[MARKDOWNLINT_CONFIG_KEY]) {
-    settings[MARKDOWNLINT_CONFIG_KEY] = MARKDOWN_VSCODE_SETTINGS[MARKDOWNLINT_CONFIG_KEY];
-    modified = true;
-  }
-
-  if (!settings[MARKDOWN_STYLES_KEY]) {
-    settings[MARKDOWN_STYLES_KEY] = [...MARKDOWN_VSCODE_SETTINGS[MARKDOWN_STYLES_KEY]];
-    modified = true;
-  }
-
-  if (modified) {
-    await writeSettingsJson(targetDir, settings);
-  }
-
-  return modified;
-}
-
-/** CSS files to copy from _templates/.vscode to target .vscode */
-const MARKDOWN_CSS_FILES = ['markdown-custom-dark.css', 'markdown-github-light.css'] as const;
-
-/**
- * Copy one CSS file from _templates/.vscode to target .vscode folder.
- */
-async function copyMarkdownCssFile(
-  targetDir: string,
-  filename: (typeof MARKDOWN_CSS_FILES)[number],
-): Promise<boolean> {
-  const destPath = resolve(targetDir, '.vscode', filename);
-  if (fileExists(destPath)) {
-    return false;
-  }
-
-  const templatesPath = resolve(__dirname, '../../../../_templates/.vscode', filename);
-  const distTemplatesPath = resolve(__dirname, '../../../_templates/.vscode', filename);
-
-  const srcPath = fileExists(templatesPath)
-    ? templatesPath
-    : fileExists(distTemplatesPath)
-    ? distTemplatesPath
-    : null;
-  if (!srcPath) {
-    return false;
-  }
-
-  await mkdir(dirname(destPath), { recursive: true });
-  await copyFile(srcPath, destPath);
-  return true;
-}
-
-/**
- * Copy markdown CSS files (markdown-custom-dark.css, markdown-github-light.css) to target .vscode folder.
- */
-async function copyMarkdownCss(targetDir: string): Promise<boolean> {
-  let anyCopied = false;
-  for (const filename of MARKDOWN_CSS_FILES) {
-    const copied = await copyMarkdownCssFile(targetDir, filename);
-    if (copied) anyCopied = true;
-  }
-  return anyCopied;
-}
-
-/**
  * Apply markdown feature to an existing package.
  */
 export async function applyMarkdown(context: FeatureContext): Promise<FeatureApplyResult> {
@@ -209,7 +133,7 @@ export async function applyMarkdown(context: FeatureContext): Promise<FeatureApp
   }
 
   // 3. Add VSCode settings for markdown
-  const settingsModified = await addMarkdownVSCodeSettings(context.targetDir);
+  const settingsModified = await applyMarkdownVSCodeSettings(context.targetDir);
   if (settingsModified) {
     applied.push('.vscode/settings.json (markdown)');
     successMessage('Added markdown settings to VSCode');
@@ -227,7 +151,7 @@ export async function applyMarkdown(context: FeatureContext): Promise<FeatureApp
   // 5. Copy markdown CSS files from _templates/.vscode
   const cssCopied = await copyMarkdownCss(context.targetDir);
   if (cssCopied) {
-    applied.push(`.vscode/${MARKDOWN_CSS_FILES.join(', ')}`);
+    applied.push('.vscode/markdown CSS files');
     successMessage('Copied markdown CSS files to .vscode');
   }
 
